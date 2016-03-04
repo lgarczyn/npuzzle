@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 14:23:34 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/04 14:25:06 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ class State {
 	private:
 		std::u16string	_data;
 		int				_weight;
-		State			*_parent;
+		State*			_parent;
 
 	public:
 		static int width;
@@ -32,6 +32,6 @@ class State {
 		State(const std::string& data);
 		State(State* parent, const Movement direction);
 
-		bool IsSolvable();
-		State&	operator=(const State& o);;
+		bool 	IsSolvable();
+		State&	operator=(const State& o);
 };
