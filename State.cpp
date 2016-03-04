@@ -30,20 +30,25 @@ State::State(State* parent, const State::Movement direction) {
 }
 
 bool State::isSolvable() {
-	std::u16string solve = _data;
+	std::u16string grid = _data;
 
-	GridPoint posZero = GridPoint::GetPointFromIndex((int) solve.find(0), width);
+	GridPoint posZero = GridPoint::GetPointFromIndex((int) grid.find(0), width);
 	GridPoint destZero = GridPoint::GetPointFromIndex((int) solution.find(0), width);
 
 	int distance = posZero.ManDistance(destZero);
 
-	//TODO prettify
 	int index = 0;
 	int moveCount = 0;
-	while (index < solve.length()){
-		if (solve[index] != solution[index])
+	while (index < grid.length()){
+		char16_t gridVal = grid[index];
+		char16_t solutionVal = solution[index];
+
+		if (gridVal != solutionVal)
 		{
-			std::swap(solve[index], solve[solve.find(solution[index])]);
+			int swapIndex = grid.find(solutionVal);
+			if (swapIndex == std::string::npos)
+
+			std::swap(gridVal, );
 			moveCount++;
 		}
 		index++;

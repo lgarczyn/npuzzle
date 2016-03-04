@@ -15,26 +15,32 @@
 #pragma once
 
 class State {
-	private:
-		std::u16string	_data;
-		int				_weight;
-		State*			_parent;
+private:
+	std::u16string	_data;
+	int				_weight;
+	State*			_parent;
 
-	public:
-		static int width;
-		static int height;
-	static u16_string solution;
+public:
+	static int width;
+	static int height;
+	static u16string solution;
 
-		enum Movement {
-			Up,
-			Right,
-			Down,
-			Left,
-		};
+	enum Movement {
+		Up,
+		Right,
+		Down,
+		Left,
+	};
 
-	State(const std::u16string &data);
+	enum GridState {
+		MissingNum,
+		Impossible,
+		Valid,
+	};
+
+		State(const std::u16string &data);
 		State(State* parent, const Movement direction);
 
-		bool 	IsSolvable();
+		bool 	isSolvable();
 		State&	operator=(const State& o);
 };
