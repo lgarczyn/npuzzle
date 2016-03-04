@@ -11,10 +11,8 @@
 /* ************************************************************************** */
 
 #include <iostream>
-#include <exception>
 
 #include "Parser.hpp"
-#include "State.hpp"
 #include "Generator.hpp"
 
 State	*init(int ac, char **av)
@@ -43,14 +41,19 @@ int		main(int ac, char **av)
 	State*	initial;
 
 	initial = init(ac, av);
-	if (!initial->is_solvable())
+	if (initial->is_solvable() == State::Valid)
+	{
+		std::cout << av[0] << ": Puzzle is solvable" << std::endl;
+	}
+	else if (initial->is_solvable() == State::Impossible)
 	{
 		std::cerr << av[0] << ": Puzzle is unsolvable" << std::endl;
 		exit(1);
 	}
 	else
 	{
-		std::cout << av[0] << ": Puzzle is solvable" << std::endl;
+		std::cerr << av[0] << ": Puzzle is broken" << std::endl;
+		exit(1);
 	}
 	return (0);
 }

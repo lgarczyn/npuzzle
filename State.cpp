@@ -41,10 +41,9 @@ State::GridState State::is_solvable() {
 	std::string::size_type index = 0;
 	int moveCount = 0;
 	while (index < grid.length()){
-		char16_t& gridVal = grid[index];
 		char16_t solutionVal = solution[index];
 
-		if (gridVal != solutionVal)
+		if (grid[index] != solutionVal)
 		{
 			std::string::size_type swapIndex = grid.find(solutionVal);
 			if (swapIndex == std::string::npos)
@@ -52,7 +51,7 @@ State::GridState State::is_solvable() {
 				return (State::GridState::MissingNum);
 			}
 
-			std::swap(gridVal, gridVal);
+			std::swap(grid[index], grid[swapIndex]);
 			moveCount++;
 		}
 		index++;
