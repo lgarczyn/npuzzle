@@ -13,8 +13,9 @@
 #include "State.hpp"
 #include "GridPoint.h"
 
-int		State::width = 0;
-int		State::height = 0;
+int				State::width = 0;
+int				State::height = 0;
+std::u16string	State::solution();
 
 State::State(const std::u16string &data) {
 	_data = data;
@@ -28,16 +29,25 @@ State::State(State* parent, const State::Movement direction) {
 	//do string shifting thing
 }
 
-bool State::IsSolvable() {
+bool State::isSolvable() {
 	std::u16string solve = _data;
 
+	GridPoint posZero = GridPoint::GetPointFromIndex((int) solve.find(0), width);
+	GridPoint destZero = GridPoint::GetPointFromIndex((int) solution.find(0), width);
+
+	int distance = posZero.ManDistance(destZero);
+
+	//TODO prettify
 	int index = 0;
-	GridPoint posZero((int) solve.find(0), width, height);
-	GridPoint destZero((int) solution.find(0), width, height);
-
-	while (index < solve.length()) {
-
+	int moveCount = 0;
+	while (index < solve.length()){
+		if (solve[index] != solution[index])
+		{
+			std::swap(solve[index], solve[solve.find(solution[index])]);
+			moveCount++;
+		}
+		index++;
 	}
 
-	return (false);
+	return (moveCount % 2 == distance % 2);
 }
