@@ -6,14 +6,16 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 15:03:26 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/04 17:54:08 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <exception>
+
 #include "Parser.hpp"
 #include "State.hpp"
+#include "Generator.hpp"
 
 State	*init(int ac, char **av)
 {
@@ -32,19 +34,20 @@ State	*init(int ac, char **av)
 		std::cerr << e.what() << std::endl;
 		exit(1);
 	}
+	State::solution = Generator::gen_solution();
 	return (initial);
 }
 
 int		main(int ac, char **av)
 {
-	State	*initial;
+	State*	initial;
 
 	initial = init(ac, av);
-	
 	if (!initial->is_solvable())
 	{
 		std::cerr << av[0] << ": Puzzle is unsolvable" << std::endl;
 		exit(1);
 	}
+	(void)solution;
 	return (0);
 }
