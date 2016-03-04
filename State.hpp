@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   State.cpp                                          :+:      :+:    :+:   */
+/*   State.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 14:23:41 by edelangh         ###   ########.fr       */
+/*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
+/*   Updated: 2016/03/04 14:23:34 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "State.hpp"
+#include <string>
 
-int		State::width = 0;
-int		State::height = 0;
+class State {
+	private:
+		std::u16string	_data;
+		int				_weight;
+		State			*_parent;
 
-State::State(const std::string& data) {
-	//interpret;
-	//_data = data;
-	_weight = 0;
-	_parent = NULL;
-}
+	public:
+		static int width;
+		static int height;
 
-State::State(State* parent, const State::Movement direction) {
-	_parent = parent;
-	_weight = parent->_weight + 1;
-	//do string shifting thing
-}
+		enum Movement {
+			Up,
+			Right,
+			Down,
+			Left,
+		};
 
-bool State::IsSolvable() {
-	std::string solve;
-	//solve
-	return (false);
-}
+		State(const std::string& data);
+		State(State* parent, const Movement direction);
+
+		bool IsSolvable();
+		State&	operator=(const State& o);;
+};
