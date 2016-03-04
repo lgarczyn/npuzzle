@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 17:54:08 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/04 17:57:38 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,5 @@ int		main(int ac, char **av)
 		std::cerr << av[0] << ": Puzzle is unsolvable" << std::endl;
 		exit(1);
 	}
-	(void)solution;
 	return (0);
 }

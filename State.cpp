@@ -15,7 +15,7 @@
 
 int				State::width = 0;
 int				State::height = 0;
-std::u16string	State::solution();
+std::u16string	State::solution;
 
 State::State(const std::u16string &data) {
 	_data = data;
@@ -30,25 +30,36 @@ State::State(State* parent, const State::Movement direction) {
 	(void)direction;
 }
 
-bool State::isSolvable() {
-	std::u16string solve = _data;
+State::GridState State::is_solvable() {
+	std::u16string grid = _data;
 
-	GridPoint posZero = GridPoint::GetPointFromIndex((int) solve.find(0), width);
-	GridPoint destZero = GridPoint::GetPointFromIndex((int) solution.find(0), width);
+	GridPoint posZero = GridPoint::GetPointFromIndex((int) grid.find(static_cast<char16_t >(0)), width);
+	GridPoint destZero = GridPoint::GetPointFromIndex((int) solution.find(static_cast<char16_t >(0)), width);
 
 	int distance = posZero.ManDistance(destZero);
 
-	//TODO prettify
 	int index = 0;
 	int moveCount = 0;
-	while (index < solve.length()){
-		if (solve[index] != solution[index])
+	while (index < grid.length()){
+		char16_t& gridVal = grid[index];
+		char16_t& solutionVal = solution[index];
+
+		if (gridVal != solutionVal)
 		{
-			std::swap(solve[index], solve[solve.find(solution[index])]);
+			int swapIndex = grid.find(solutionVal);
+			if (swapIndex == std::string::npos)
+			{
+				return (State::GridState::MissingNum);
+			}
+
+			std::swap(gridVal, gridVal);
 			moveCount++;
 		}
 		index++;
 	}
 
-	return (moveCount % 2 == distance % 2);
+	if (moveCount % 2 == distance % 2){
+		return (State::GridState::Valid);
+	}
+	return (State::GridState::Impossible);
 }

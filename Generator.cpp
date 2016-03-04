@@ -6,13 +6,13 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:16:46 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 17:52:15 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/04 17:57:16 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Generator.hpp"
 
-State*	Generator::gen_solution(void)
+std::u16string	Generator::gen_solution(void)
 {
 	int				w = State::width;
 	int				h = State::height;
@@ -50,5 +50,5 @@ State*	Generator::gen_solution(void)
 		}
 		++c;
 	}
-	return (new State(data));
+	return (data);
 }
