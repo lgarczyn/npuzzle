@@ -16,11 +16,12 @@ class State {
 	private:
 		std::u16string	_data;
 		int				_weight;
-		State			*_parent;
+	State *_parent;
 
 	public:
 		static int width;
 		static int height;
+	static u16_string solution;
 
 		enum Movement {
 			Up,
@@ -29,7 +30,7 @@ class State {
 			Left,
 		};
 
-		State(const std::string& data);
+	State(const std::u16string &data);
 		State(State* parent, const Movement direction);
 
 		bool IsSolvable();
