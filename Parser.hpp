@@ -1,40 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   State.hpp                                          :+:      :+:    :+:   */
+/*   Parser.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 14:51:27 by edelangh         ###   ########.fr       */
+/*   Created: 2016/03/04 14:52:37 by edelangh          #+#    #+#             */
+/*   Updated: 2016/03/04 15:04:02 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
-
 #pragma once
 
-class State {
+#include "State.hpp"
+
+class	Parser
+{
 	private:
-		std::u16string	_data;
-		int				_weight;
-		State*			_parent;
-
 	public:
-		static int width;
-		static int height;
-	static u16_string solution;
-
-		enum Movement {
-			Up,
-			Right,
-			Down,
-			Left,
-		};
-
-	State(const std::u16string &data);
-		State(State* parent, const Movement direction);
-
-		bool 	IsSolvable();
-		State&	operator=(const State& o);
+		Parser() {}
+		State	*parse_file(const char* file_src);
+		State	*parse_istream(std::istream& file);
 };
