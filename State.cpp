@@ -38,7 +38,7 @@ State::GridState State::is_solvable() {
 
 	int distance = posZero.ManDistance(destZero);
 
-	int index = 0;
+	std::string::size_type index = 0;
 	int moveCount = 0;
 	while (index < grid.length()){
 		char16_t& gridVal = grid[index];
@@ -46,7 +46,7 @@ State::GridState State::is_solvable() {
 
 		if (gridVal != solutionVal)
 		{
-			int swapIndex = grid.find(solutionVal);
+			std::string::size_type swapIndex = grid.find(solutionVal);
 			if (swapIndex == std::string::npos)
 			{
 				return (State::GridState::MissingNum);

@@ -48,5 +48,9 @@ int		main(int ac, char **av)
 		std::cerr << av[0] << ": Puzzle is unsolvable" << std::endl;
 		exit(1);
 	}
+	else
+	{
+		std::cout << av[0] << ": Puzzle is solvable" << std::endl;
+	}
 	return (0);
 }

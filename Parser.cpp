@@ -15,8 +15,6 @@
 
 #include <iostream>
 #include <regex>
-#include <string>
-#include <algorithm>
 
 State*			Parser::parse_file(const char* file_src)
 {
@@ -32,7 +30,6 @@ State*			Parser::parse_file(const char* file_src)
 }
 
 
-#include <vector>
 void split(const std::string& str,
 		std::vector<std::string>& tokens,
 		const std::string& delimiters = " ")
