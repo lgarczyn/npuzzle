@@ -11,21 +11,19 @@
 /* ************************************************************************** */
 
 #include <string>
+#include <list>
+#include "Heuristics.hpp"
 
 #pragma once
 
 class State {
-private:
-	std::u16string	_data;
-	int				_weight;
-	State*			_parent;
-
 public:
 	static int width;
 	static int height;
 	static std::u16string solution;
 
 	enum Movement {
+		None,
 		Up,
 		Right,
 		Down,
@@ -38,9 +36,26 @@ public:
 		Valid,
 	};
 
-		State(const std::u16string &data);
-		State(State* parent, const Movement direction);
+	State(const std::u16string &data);
+	State(State* parent, const Movement direction);
 
-		GridState 	is_solvable();
-		State&	operator=(const State& o);
+	std::list<State::Movement>	*get_movements() const;
+	int 						get_distance() const;
+	GridState 					is_solvable() const;
+	bool 						is_final() const;
+	State&						operator=(const State& o);
+
+
+	static bool		pred_unordered_set(State* a, State* b);
+	bool			operator==(State* b);
+	static size_t	hash_unordered_set(State*a);
+	static bool		comp_set(State* a, State* b);
+
+
+private:
+	std::u16string	_data;
+	score			_weight;
+	int 			_distance;
+	Movement 		_movement;
+	State*			_parent;
 };

@@ -47,6 +47,8 @@ std::u16string	Generator::gen_solution(void)
 				if (pos >= w * (h - 1) || data[pos + w])
 					dir = State::Left;
 				break ;
+			default:
+				break;
 		}
 		++c;
 	}

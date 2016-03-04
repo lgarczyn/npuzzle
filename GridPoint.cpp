@@ -2,7 +2,7 @@
 // Created by Louis GARCZYNSKI on 3/4/16.
 //
 
-#include "GridPoint.h"
+#include "GridPoint.hpp"
 #include <stdlib.h>
 
 GridPoint::GridPoint() : x(0), y(0) { }
