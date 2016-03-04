@@ -11,14 +11,14 @@ public:
     static int width;
     static int height;
 
-    State(std::string data) {
+    State(std::string& data) {
         //interpret;
         _data = data;
         _weight = 0;
         _parent = NULL;
     }
 
-    State(State *parent, Movement direction) {
+    State(State* parent, Movement direction) {
         _parent = parent;
         _weight = parent->_weight + 1;
 
