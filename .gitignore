@@ -3,6 +3,10 @@
 
 puzzle/*.txt
 
+Makefile
+CMakeCache.txt
+cmake_install.cmake
+CMakeFiles/*
 *.o
 *.a
 *.lib
