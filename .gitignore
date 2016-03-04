@@ -3,6 +3,8 @@
 
 puzzle/*.txt
 
+npuzzle
+
 Makefile
 CMakeCache.txt
 cmake_install.cmake

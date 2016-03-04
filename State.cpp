@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 14:25:09 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/04 15:34:03 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,12 @@ State::State(const std::u16string &data) {
 State::State(State* parent, const State::Movement direction) {
 	_parent = parent;
 	_weight = parent->_weight + 1;
+	(void)direction;
 	//do string shifting thing
 }
 
-bool State::IsSolvable() {
-	std::u16string solve = _data;
+bool State::is_solvable() {
+/*	std::u16string solve = _data;
 
 	int index = 0;
 	GridPoint posZero((int) solve.find(0), width, height);
@@ -39,5 +40,5 @@ bool State::IsSolvable() {
 
 	}
 
-	return (false);
+*/	return (false);
 }
