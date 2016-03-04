@@ -6,14 +6,13 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 15:03:37 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 17:12:11 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/04 19:07:01 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Parser.hpp"
+#include "tools.h"
 #include <fstream>
-
-#include <iostream>
 #include <regex>
 
 State*			Parser::parse_file(const char* file_src)
@@ -29,29 +28,13 @@ State*			Parser::parse_file(const char* file_src)
 	return (res);
 }
 
-
-void split(const std::string& str,
-		std::vector<std::string>& tokens,
-		const std::string& delimiters = " ")
-{
-	std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-	std::string::size_type pos     = str.find_first_of(delimiters, lastPos);
-
-	tokens.clear();
-	while (std::string::npos != pos || std::string::npos != lastPos)
-	{
-		tokens.push_back(str.substr(lastPos, pos - lastPos));
-		lastPos = str.find_first_not_of(delimiters, pos);
-		pos = str.find_first_of(delimiters, lastPos);
-	}
-}
-
 State*			Parser::parse_istream(std::istream& file)
 {
 	State*						res;
 	std::string					line;
 	std::vector<std::string>	tab;
 	std::u16string				data;
+	int							w;
 
 	while (std::getline(file, line))
 	{
@@ -64,17 +47,30 @@ State*			Parser::parse_istream(std::istream& file)
 			if (State::width == 0)
 			{
 				if (tab.size() != 1)
-					std::cerr << "TODO: Throw" << std::endl; // TODO
-				State::width = std::stoi(tab[0]);
-				State::height = State::width;
+					throw std::logic_error("Bad size initialization");
+				if (!is_number(tab[0]))
+					throw std::logic_error("Size is not a number: " + tab[0]);
+				w = std::stoi(tab[0]);
+				State::width = w;
+				State::height = w;
+				if (w <= 0 || w >= 256)
+					throw std::logic_error("Bad size: 0 < size < 256");
 			}
 			else
 			{
+				if (tab.size() != static_cast<unsigned long>(w))
+					throw std::logic_error("Bad line width");
 				for (auto s:tab)
+				{
+					if (!is_number(s))
+						throw std::logic_error("Is not a number: " + tab[0]);
 					data.push_back(std::stoi(s));
+				}
 			}
 		}
 	}
+	if (data.length() != static_cast<unsigned long>(w * w))
+		throw std::logic_error("Bad line number");
 	res = new State(data);
 	return (res);
 }
