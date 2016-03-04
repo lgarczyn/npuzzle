@@ -7,10 +7,10 @@
 
 #include <string>
 
-using score=long int;
-using long int (*weighter)(const uint16_t& data, int width);
+using score = long int;
+using weighter = score (*)(const uint16_t& data, int width);
 
-static class Heuristics
+class Heuristics
 {
 public:
     score ManhattanDistance(const uint16_t& data, int width);
