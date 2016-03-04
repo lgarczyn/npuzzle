@@ -23,7 +23,7 @@ private:
 public:
 	static int width;
 	static int height;
-	static u16string solution;
+	static std::u16string solution;
 
 	enum Movement {
 		Up,
@@ -41,6 +41,6 @@ public:
 		State(const std::u16string &data);
 		State(State* parent, const Movement direction);
 
-		bool 	isSolvable();
+		GridState 	is_solvable();
 		State&	operator=(const State& o);
 };
