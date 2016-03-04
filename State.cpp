@@ -42,7 +42,7 @@ State::GridState State::is_solvable() {
 	int moveCount = 0;
 	while (index < grid.length()){
 		char16_t& gridVal = grid[index];
-		char16_t& solutionVal = solution[index];
+		char16_t solutionVal = solution[index];
 
 		if (gridVal != solutionVal)
 		{
