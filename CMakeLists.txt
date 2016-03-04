@@ -6,4 +6,7 @@ set(SRCS
 	State.cpp
 	GridPoint.cpp
 	)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
+
 add_executable(npuzzle ${SRCS})

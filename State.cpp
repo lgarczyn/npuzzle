@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 14:25:09 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/04 16:30:30 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ State::State(State* parent, const State::Movement direction) {
 	_parent = parent;
 	_weight = parent->_weight + 1;
 	//do string shifting thing
+	(void)direction;
 }
 
 State::GridState State::is_solvable() {
