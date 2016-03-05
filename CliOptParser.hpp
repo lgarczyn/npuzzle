@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Generator.hpp                                      :+:      :+:    :+:   */
+/*   CliOptParser.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/03/04 17:12:26 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/05 18:51:27 by edelangh         ###   ########.fr       */
+/*   Created: 2016/03/05 18:38:58 by edelangh          #+#    #+#             */
+/*   Updated: 2016/03/05 18:39:12 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "State.hpp"
+#pragma once
 
-class Generator
-{
-	protected:
-		static void				random_iteration(std::u16string& data);
-	public:
-		static int	iteration;
+#include <string>
 
-		static std::u16string	gen_solution(void);
-		static std::u16string	gen_solvable(void);
-		static std::u16string	gen_unsolvable(void);
-		static std::u16string	gen_random(void);
-};
+bool	is_cmd_opt(char** begin, char** end, const std::string& option);
+char*	get_cmd_opt(char** begin, char** end, const std::string& option);

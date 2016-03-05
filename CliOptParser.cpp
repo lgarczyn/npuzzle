@@ -1,26 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Generator.hpp                                      :+:      :+:    :+:   */
+/*   CliOptParser.cpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2016/03/04 17:12:26 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/05 18:51:27 by edelangh         ###   ########.fr       */
+/*   Created: 2016/03/05 18:25:25 by edelangh          #+#    #+#             */
+/*   Updated: 2016/03/05 18:59:06 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "State.hpp"
+#include <algorithm>
+#include <string>
 
-class Generator
+char*	get_cmd_opt(char** begin, char** end, const std::string& option)
 {
-	protected:
-		static void				random_iteration(std::u16string& data);
-	public:
-		static int	iteration;
+	while (begin != end)
+	{
+		if (!option.compare(*begin))
+			return (*(++begin));
+		++begin;
+	}
+	return 0;
+}
 
-		static std::u16string	gen_solution(void);
-		static std::u16string	gen_solvable(void);
-		static std::u16string	gen_unsolvable(void);
-		static std::u16string	gen_random(void);
-};
+bool	is_cmd_opt(char** begin, char** end, const std::string& option)
+{
+	while (begin != end)
+	{
+		if (!option.compare(*begin))
+			return (true);
+		++begin;
+	}
+	return (false);
+}
