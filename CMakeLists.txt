@@ -9,8 +9,8 @@ set(SRCS
 	Heuristics.cpp
 	tools.cpp
 	CliOptParser.cpp
-	Heuristics.cpp Heuristics.hpp Solver.cpp Solver.hpp
-	)
+	Heuristics.cpp
+	Solver.cpp)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
 

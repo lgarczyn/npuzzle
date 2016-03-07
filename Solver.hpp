@@ -2,8 +2,7 @@
 // Created by Louis GARCZYNSKI on 3/4/16.
 //
 
-#ifndef NPUZZLE_SOLVER_H
-#define NPUZZLE_SOLVER_H
+#pragma once
 
 #include <string>
 #include <list>
@@ -12,28 +11,27 @@
 #include "State.hpp"
 
 class Solver {
+	public:
+		class Result
+		{
+			public:
+				int timeComplexity;
+				int sizeComplexity;
+				std::list<State::Movement>* movements;
+				bool finished;
+				Result(int timeComplexity, int sizeComplexity);
+		};
 
-public:
-    class Result
-    {
-    public:
-        int timeComplexity;
-        int sizeComplexity;
-        std::list<State::Movement>* movements;
-        bool finished;
-        Result(int timeComplexity, int sizeComplexity);
-    };
+		Solver(State* root);
+		Result step();
+		~Solver();
+		
+		void	set_candidates(State* from);
 
-    Solver(State* root);
-    Result Step();
-    ~Solver();
-
-private:
-    std::unordered_set<State*, State::hash_unordered_set, State::pred_unordered_set> opened;
-    std::unordered_set<State*, State::hash_unordered_set, State::pred_unordered_set> closed;
-    std::set<State*, State::comp_set> candidates;
-
+	private:
+		std::unordered_set<State*>	opened;
+		std::unordered_set<State*>	closed;
+		std::set<State*>			opened_set;
+		std::vector<State*>			candidates;
 };
 
-
-#endif //NPUZZLE_SOLVER_H
