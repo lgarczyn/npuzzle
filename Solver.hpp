@@ -2,8 +2,7 @@
 // Created by Louis GARCZYNSKI on 3/4/16.
 //
 
-#ifndef NPUZZLE_SOLVER_H
-#define NPUZZLE_SOLVER_H
+#pragma once
 
 #include <string>
 #include <list>
@@ -34,4 +33,3 @@ class Solver {
 		std::set<State*> candidates;
 };
 
-#endif //NPUZZLE_SOLVER_H

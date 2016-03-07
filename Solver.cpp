@@ -8,6 +8,7 @@ Solver::Solver(State* root)
 {
 	opened.insert(root);
 	candidates.insert(root);
+	candidates.insert(root);
 };
 
 Solver::Result Solver::step()
@@ -17,6 +18,7 @@ Solver::Result Solver::step()
 	if (!opened.empty())
 	{
 		State* e = *candidates.begin();
+
 		if (e->is_final())
 		{
 			result.finished = true;

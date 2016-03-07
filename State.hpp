@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 13:55:37 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 14:01:30 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ class State {
 
 
 		static bool		pred_unordered_set(State* a, State* b);
-		bool			operator==(State* b);
+		bool			operator<(const State* b) const;
 		size_t	hash_unordered_set(const State* a);
 		static bool		comp_set(State* a, State* b);
 
@@ -70,5 +70,15 @@ struct std::hash<State*>
 		std::cout << "hash state" << std::endl;
 		(void)x;
 		return (0);
+	}
+};
+
+template<>
+struct std::less<State*>
+{
+	bool operator()(const State* a, const State* b)
+	{
+		std::cout << "less on state" << std::endl;
+		return (a < b);
 	}
 };

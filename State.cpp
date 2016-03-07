@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 13:09:19 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 13:58:31 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,8 +95,9 @@ bool		State::pred_unordered_set(State* a, State* b)
 	return  (a == b);
 }
 
-bool			State::operator==(State* b)
+bool			State::operator<(const State* b) const 
 {
+	std::cout << "operator < of state" << std::endl;
 	return  (_data == b->_data);
 }
 
