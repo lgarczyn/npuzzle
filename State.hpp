@@ -10,17 +10,21 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
+
 #include <string>
 #include <list>
+#include <vector>
 #include "Heuristics.hpp"
-
-#pragma once
+#include "Generator.hpp"
+#include "GridPoint.hpp"
 
 class State {
 public:
 	static int width;
 	static int height;
 	static std::u16string solution;
+	static std::vector<int> order;
 
 	enum Movement {
 		None,
@@ -51,6 +55,7 @@ public:
 	static size_t	hash_unordered_set(State*a);
 	static bool		comp_set(State* a, State* b);
 
+	static State*	init(std::u16string data, int height, int width);
 
 private:
 	std::u16string	_data;

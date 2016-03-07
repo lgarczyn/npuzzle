@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "State.hpp"
-#include "GridPoint.hpp"
 
 int				State::width = 0;
 int				State::height = 0;
@@ -108,4 +107,56 @@ size_t	State::hash_unordered_set(State*a)
 bool		State::comp_set(State* a, State* b)
 {
 	return  (a->_weight > b->_weight);
+}
+
+std::vector<int> get_order(int w, int h)
+{
+	int orderIndex = 0;
+	int				max = w * h;
+	std::vector<int> order = std::vector<int>(max);
+	char16_t		c = 1;
+	int				pos = 0;
+	State::Movement	dir = State::Right;
+	std::u16string	data(max, static_cast<char16_t>('\0'));
+
+	while (c != max)
+	{
+		data[pos] = c;
+		switch (dir)
+		{
+			case State::Right:
+				++pos;
+				if ((pos + 1) % w == 0 || data[pos + 1])
+					dir = State::Down;
+				break ;
+			case State::Left:
+				--pos;
+				if (pos % w == 0 || data[pos - 1])
+					dir = State::Up;
+				break ;
+			case State::Up:
+				pos -= w;
+				if (pos < w || data[pos - w])
+					dir = State::Right;
+				break ;
+			case State::Down:
+				pos += w;
+				if (pos >= w * (h - 1) || data[pos + w])
+					dir = State::Left;
+				break ;
+			default:
+				break;
+		}
+		++c;
+		order[orderIndex++] = pos;
+	}
+	return (order);
+}
+
+void State::init(int width, int height)
+{
+	State::width = width;
+	State::height = height;
+	State::order = get_order(width, height);
+	State::solution = Generator::gen_solution();
 }

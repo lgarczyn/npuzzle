@@ -18,7 +18,17 @@ class	Parser
 {
 	private:
 	public:
+
+		class ParseResult
+		{
+		public:
+			std::u16string data;
+			int width;
+
+			ParseResult();
+		};
+
 		Parser() {}
-		State	*parse_file(const char* file_src);
-		State	*parse_istream(std::istream& file);
+		ParseResult parse_file(const char* file_src);
+		ParseResult parse_istream(std::istream& file);
 };

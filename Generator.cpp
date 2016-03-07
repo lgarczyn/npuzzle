@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "Generator.hpp"
-#include <cstdlib>
 
 int	Generator::iteration = 42;
 
@@ -20,40 +19,11 @@ std::u16string	Generator::gen_solution(void)
 	int				w = State::width;
 	int				h = State::height;
 	char16_t		max = w * h;
-	char16_t		c = 1;
-	int				pos = 0;
-	State::Movement	dir = State::Right;
-	std::u16string	data(w * h, static_cast<char16_t>('\0'));
+	std::u16string	data(max, static_cast<char16_t>('\0'));
 
-	while (c != max)
+	for (int i = 0; i < max; i++)
 	{
-		data[pos] = c;
-		switch (dir)
-		{
-			case State::Right:
-				++pos;
-				if ((pos + 1) % w == 0 || data[pos + 1])
-					dir = State::Down;
-				break ;
-			case State::Left:
-				--pos;
-				if (pos % w == 0 || data[pos - 1])
-					dir = State::Up;
-				break ;
-			case State::Up:
-				pos -= w;
-				if (pos < w || data[pos - w])
-					dir = State::Right;
-				break ;
-			case State::Down:
-				pos += w;
-				if (pos >= w * (h - 1) || data[pos + w])
-					dir = State::Left;
-				break ;
-			default:
-				break;
-		}
-		++c;
+		data[State::order[i]] = (i + 1) % max;
 	}
 	return (data);
 }
@@ -113,4 +83,14 @@ std::u16string	Generator::gen_random(void)
 		return (gen_solvable());
 	else
 		return (gen_unsolvable());
+}
+
+std::u16string Generator::gen(Generator::GenerationKind kind) {
+	switch (kind)
+	{
+		case solved: return (gen_solution());
+		case solvable: return  (gen_solvable());
+		case unsolvable: return  (gen_unsolvable());
+		case random: return  (gen_random());
+	}
 }
