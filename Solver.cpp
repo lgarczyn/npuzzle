@@ -3,6 +3,7 @@
 //
 
 #include "Solver.hpp"
+#include <iostream>
 
 Solver::Solver(State* root)
 {
@@ -36,10 +37,9 @@ Solver::Result Solver::step()
 		else
 		{
 			opened.erase(e);
-			opened_set.erase(e);
+			opened_set.erase(opened_set.begin());
 			closed.insert(e);
 			set_candidates(e);
-
 			for (auto s:candidates)
 			{
 				if (opened.find(s) != opened.end()

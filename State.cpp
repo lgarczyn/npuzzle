@@ -6,12 +6,13 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 15:21:46 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 17:16:58 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "State.hpp"
 #include "GridPoint.hpp"
+#include <iostream>
 
 int				State::width = 0;
 int				State::height = 0;
@@ -28,7 +29,7 @@ State::State(const std::u16string &data) {
 State::State(State* parent, const State::Movement direction) {
 	_data = parent->_data;
 	_parent = parent;
-	_weight = 0;
+	_weight = std::rand();
 	_distance = parent->_distance + 1;
 	_movement = direction;
 
@@ -113,6 +114,11 @@ bool State::is_final() const {
 	return (_data == solution);
 }
 
+const std::u16string&	State::get_data(void) const
+{
+	return (this->_data);
+}
+
 bool			State::operator<(const State* b) const 
 {
 	std::cout << "operator < of state" << std::endl;
@@ -132,4 +138,12 @@ State*			State::get_parent(void) const
 void 			State::set_distance(int d)
 {
 	this->_distance = d;
+}
+score 						State::get_weight(void) const
+{
+	return (this->_weight);
+}
+void 						State::set_weight(score s)
+{
+	this->_weight = s;
 }

@@ -31,7 +31,7 @@ class Solver {
 	private:
 		std::unordered_set<State*>	opened;
 		std::unordered_set<State*>	closed;
-		std::set<State*>			opened_set;
+		std::multiset<State*>			opened_set;
 		std::vector<State*>			candidates;
 };
 
