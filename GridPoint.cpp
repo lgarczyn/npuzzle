@@ -3,7 +3,6 @@
 //
 
 #include "GridPoint.hpp"
-#include <stdlib.h>
 
 GridPoint::GridPoint() : x(0), y(0) { }
 
@@ -19,5 +18,13 @@ int GridPoint::GetIndexFromPoint(const GridPoint &point, int width) {
 
 int GridPoint::ManDistance(const GridPoint &value) {
     return (abs(x - value.x) + abs(y - value.y));
+}
+
+int GridPoint::ManDistance(const GridPoint &a, const GridPoint &b) {
+    return (abs(a.x - b.x) + abs(a.y - b.y));
+}
+
+int GridPoint::ManDistance(int a, int b, int width) {
+    return (abs(a % width - b % width) + abs(a / width - b / width));
 }
 

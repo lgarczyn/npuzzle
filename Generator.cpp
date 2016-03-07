@@ -6,62 +6,26 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:16:46 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/05 19:18:48 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 19:42:45 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Generator.hpp"
-#include <cstdlib>
 
 int	Generator::iteration = 42;
 
-std::u16string	Generator::gen_solution(void)
+std::u16string	Generator::gen_solution(int w, int h)
 {
-	int				w = State::width;
-	int				h = State::height;
 	char16_t		max = w * h;
-	char16_t		c = 1;
-	int				pos = 0;
-	State::Movement	dir = State::Right;
-	std::u16string	data(w * h, static_cast<char16_t>('\0'));
+	std::u16string	data(max, static_cast<char16_t>('\0'));
 
-	while (c != max)
-	{
-		data[pos] = c;
-		switch (dir)
-		{
-			case State::Right:
-				++pos;
-				if ((pos + 1) % w == 0 || data[pos + 1])
-					dir = State::Down;
-				break ;
-			case State::Left:
-				--pos;
-				if (pos % w == 0 || data[pos - 1])
-					dir = State::Up;
-				break ;
-			case State::Up:
-				pos -= w;
-				if (pos < w || data[pos - w])
-					dir = State::Right;
-				break ;
-			case State::Down:
-				pos += w;
-				if (pos >= w * (h - 1) || data[pos + w])
-					dir = State::Left;
-				break ;
-			default:
-				break;
-		}
-		++c;
-	}
+	for (auto x:State::order)
+		data[State::order[x]] = (x + 2) % max;
 	return (data);
 }
-void			Generator::random_iteration(std::u16string& data)
+void			Generator::random_iteration(std::u16string& data, int w, int h)
 {
 	int		pos;
-	int		w = State::width;
-	int		h = State::height;
 
 	for (auto i = iteration; i > 0; --i)
 	{
@@ -88,29 +52,42 @@ void			Generator::random_iteration(std::u16string& data)
 	}
 }
 
-std::u16string	Generator::gen_solvable(void)
+std::u16string	Generator::gen_solvable(Parser::ParseResult& p)
 {
 	std::u16string data;
 
-	data = gen_solution();
-	random_iteration(data);
+	data = gen_solution(p.width, p.height);
+	random_iteration(data, p.width, p.height);
 	return (data);
 }
 
-std::u16string	Generator::gen_unsolvable(void)
+#include "tools.h"
+
+std::u16string	Generator::gen_unsolvable(Parser::ParseResult& p)
 {
 	std::u16string data;
 
-	data = gen_solution();
+	data = gen_solution(p.width, p.height);
 	std::swap(data.at(0), data.at(1));
-	random_iteration(data);
+	random_iteration(data, p.width, p.height);
 	return (data);
 }
 
-std::u16string	Generator::gen_random(void)
+std::u16string	Generator::gen_random(Parser::ParseResult& p)
 {
 	if (std::rand() & 1)
-		return (gen_solvable());
+		return (gen_solvable(p));
 	else
-		return (gen_unsolvable());
+		return (gen_unsolvable(p));
 }
+/*
+std::u16string Generator::gen(Generator::GenerationKind kind) {
+	switch (kind)
+	{
+		case solved: return (gen_solution());
+		case solvable: return  (gen_solvable());
+		case unsolvable: return  (gen_unsolvable());
+		case random: return  (gen_random());
+	}
+}
+*/

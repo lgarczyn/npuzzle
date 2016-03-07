@@ -6,21 +6,35 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:12:26 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/05 18:51:27 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 19:24:09 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
+
 #include "State.hpp"
+#include "Parser.hpp"
+#include <cstdlib>
 
 class Generator
 {
-	protected:
-		static void				random_iteration(std::u16string& data);
-	public:
-		static int	iteration;
+protected:
+	static void				random_iteration(std::u16string& data, int w, int h);
+public:
+	static int	iteration;
 
-		static std::u16string	gen_solution(void);
-		static std::u16string	gen_solvable(void);
-		static std::u16string	gen_unsolvable(void);
-		static std::u16string	gen_random(void);
+	Parser lol;
+	enum GenerationKind
+	{
+		solved,
+		solvable,
+		unsolvable,
+		random
+	};
+
+	static std::u16string	gen_solution(int w, int h);
+	static std::u16string	gen_solvable(Parser::ParseResult& p);
+	static std::u16string	gen_unsolvable(Parser::ParseResult& p);
+	static std::u16string	gen_random(Parser::ParseResult& p);
+//	static std::u16string	gen(GenerationKind kind);
 };

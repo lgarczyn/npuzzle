@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 17:55:18 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 19:05:21 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,18 @@
 
 #include <string>
 #include <list>
-#include "Heuristics.hpp"
 #include <vector>
 #include <functional>
+#include "Heuristics.hpp"
+#include "Generator.hpp"
+#include "GridPoint.hpp"
 
 class State {
-	public:
-		static int width;
-		static int height;
-		static std::u16string solution;
+public:
+	static int width;
+	static int height;
+	static std::u16string solution;
+	static std::vector<int> order;
 
 		enum Movement {
 			None,
@@ -53,6 +56,7 @@ class State {
 		State*						get_parent(void) const;
 
 		bool						operator<(const State* b) const;
+		static void					init(int width, int height);
 
 	private:
 		std::u16string	_data;

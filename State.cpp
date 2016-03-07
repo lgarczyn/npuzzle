@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 17:16:58 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 19:22:49 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 #include "GridPoint.hpp"
 #include <iostream>
 
-int				State::width = 0;
-int				State::height = 0;
-std::u16string	State::solution;
+int					State::width = 0;
+int					State::height = 0;
+std::u16string		State::solution;
+std::vector<int>	State::order;
 
 State::State(const std::u16string &data) {
 	_data = data;
@@ -119,7 +120,7 @@ const std::u16string&	State::get_data(void) const
 	return (this->_data);
 }
 
-bool			State::operator<(const State* b) const 
+bool			State::operator<(const State* b) const
 {
 	std::cout << "operator < of state" << std::endl;
 	return  (_data == b->_data);
@@ -139,11 +140,65 @@ void 			State::set_distance(int d)
 {
 	this->_distance = d;
 }
+
 score 						State::get_weight(void) const
 {
 	return (this->_weight);
 }
+
 void 						State::set_weight(score s)
 {
 	this->_weight = s;
+}
+
+std::vector<int> get_order(int w, int h)
+{
+	int orderIndex = 0;
+	int				max = w * h;
+	std::vector<int> order = std::vector<int>(max);
+	char16_t		c = 1;
+	int				pos = 0;
+	State::Movement	dir = State::Right;
+	std::u16string	data(max, static_cast<char16_t>('\0'));
+
+	while (c != max)
+	{
+		data[pos] = c;
+		switch (dir)
+		{
+			case State::Right:
+				++pos;
+				if ((pos + 1) % w == 0 || data[pos + 1])
+					dir = State::Down;
+				break ;
+			case State::Left:
+				--pos;
+				if (pos % w == 0 || data[pos - 1])
+					dir = State::Up;
+				break ;
+			case State::Up:
+				pos -= w;
+				if (pos < w || data[pos - w])
+					dir = State::Right;
+				break ;
+			case State::Down:
+				pos += w;
+				if (pos >= w * (h - 1) || data[pos + w])
+					dir = State::Left;
+				break ;
+			default:
+				break;
+		}
+		++c;
+		order[orderIndex++] = pos;
+	}
+	return (order);
+}
+
+void			State::init(int width, int height)
+{
+	State::width = width;
+	State::height = height;
+	State::order = get_order(width, height);
+	State::solution = Generator::gen_solution(width, height);
 }

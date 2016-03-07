@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 15:03:37 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 13:51:06 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 18:53:24 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 #include <fstream>
 #include <regex>
 
-State*			Parser::parse_file(const char* file_src)
+Parser::ParseResult::ParseResult():data(), width(){};
+
+Parser::ParseResult	Parser::parse_file(const char* file_src)
 {
 	std::ifstream	file(file_src, std::ifstream::in);
-	State*			res = nullptr;
+	ParseResult		res;
 
 	if (file.good())
 	{
@@ -32,12 +34,11 @@ State*			Parser::parse_file(const char* file_src)
 	return (res);
 }
 
-State*			Parser::parse_istream(std::istream& file)
+Parser::ParseResult		Parser::parse_istream(std::istream& file)
 {
-	State*						res;
+	ParseResult					res;
 	std::string					line;
 	std::vector<std::string>	tab;
-	std::u16string				data;
 	int							w;
 
 	while (std::getline(file, line))
@@ -48,15 +49,14 @@ State*			Parser::parse_istream(std::istream& file)
 		split(line, tab);
 		if (tab.size() > 0)
 		{
-			if (State::width == 0)
+			if (res.width == 0)
 			{
 				if (tab.size() != 1)
 					throw std::logic_error("Bad size initialization");
 				if (!is_number(tab[0]))
 					throw std::logic_error("Size is not a number: " + tab[0]);
 				w = std::stoi(tab[0]);
-				State::width = w;
-				State::height = w;
+				res.width = w;
 				if (w <= 0 || w >= 256)
 					throw std::logic_error("Bad size: 0 < size < 256");
 			}
@@ -68,13 +68,12 @@ State*			Parser::parse_istream(std::istream& file)
 				{
 					if (!is_number(s))
 						throw std::logic_error("Is not a number: " + tab[0]);
-					data.push_back(std::stoi(s));
+					res.data.push_back(std::stoi(s));
 				}
 			}
 		}
 	}
-	if (data.length() != static_cast<unsigned long>(w * w))
+	if (res.data.length() != static_cast<unsigned long>(w * w))
 		throw std::logic_error("Bad line number");
-	res = new State(data);
 	return (res);
 }

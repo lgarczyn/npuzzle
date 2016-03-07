@@ -6,14 +6,17 @@
 #define NPUZZLE_HEURISTICS_H
 
 #include <string>
+#include "GridPoint.hpp"
 
 using score = long int;
-using weighter = score (*)(const uint16_t& data, int width);
+using weighter = score (*)(const std::u16string& data, const std::u16string& solution, int width);
 
 class Heuristics
 {
 public:
-    score ManhattanDistance(const uint16_t& data, int width);
+    score ManhattanDistance(const std::u16string& data, const std::u16string& solution, int width);
+    score SmartDistance(const std::u16string& data, const std::u16string& solution, int width);
+    score SuperSmartDistance(const std::u16string& data, const std::u16string& solution, int width);
 };
 
 
