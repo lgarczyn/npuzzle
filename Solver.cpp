@@ -7,9 +7,17 @@
 Solver::Solver(State* root)
 {
 	opened.insert(root);
-	candidates.insert(root);
-	candidates.insert(root);
-};
+	opened_set.insert(root);
+}
+
+void	Solver::set_candidates(State* from)
+{
+	candidates.clear();
+	candidates.push_back(new State(from, State::Up));
+	candidates.push_back(new State(from, State::Right));
+	candidates.push_back(new State(from, State::Down));
+	candidates.push_back(new State(from, State::Left));
+}
 
 Solver::Result Solver::step()
 {
@@ -17,7 +25,7 @@ Solver::Result Solver::step()
 
 	if (!opened.empty())
 	{
-		State* e = *candidates.begin();
+		State* e = *opened_set.begin();
 
 		if (e->is_final())
 		{
@@ -28,28 +36,33 @@ Solver::Result Solver::step()
 		else
 		{
 			opened.erase(e);
-			candidates.erase(e);
+			opened_set.erase(e);
 			closed.insert(e);
-			//FOREACH POSSIBILITY S FROM E
+			set_candidates(e);
+
+			for (auto s:candidates)
 			{
-				State* s;
-
-				auto openedFound = opened.find(s);
-				auto closedFound = closed.find(s);
-
-				if (openedFound == opened.end() && closedFound == closed.end())
+				if (opened.find(s) != opened.end()
+						&&  closed.find(s) != closed.end())
 				{
 					opened.insert(s);
+					opened_set.insert(s);
+					s->set_distance(e->get_distance() + 1);
+					s->set_parent(e->get_parent());
 				}
 				else
 				{
-					// TODO: do it!
-					/*
-					   if (s->get_distance() < ()->get_distance())
-					   {
-					   opened->
-					   }
-					   */
+					if (s->get_distance() > e->get_distance() + 1)
+					{
+						s->set_distance(e->get_distance() + 1);
+						s->set_parent(e->get_parent());
+						if (closed.find(s) == closed.end())
+						{
+							opened.insert(s);
+							opened_set.insert(s);
+							closed.erase(s);
+						}
+					}
 				}
 			}
 		}
@@ -64,4 +77,4 @@ Solver::Result::Result(int timeComplexity, int sizeComplexity):
 	sizeComplexity(sizeComplexity),
 	movements(nullptr),
 	finished(false)
-{};
+{}

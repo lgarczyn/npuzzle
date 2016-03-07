@@ -25,11 +25,13 @@ class Solver {
 		Solver(State* root);
 		Result step();
 		~Solver();
+		
+		void	set_candidates(State* from);
 
 	private:
-		std::unordered_set<State*, std::hash<State*>> opened;
-		std::unordered_set<State*, std::hash<State*>> closed;
-//		std::unordered_set<State*, State::hash_unordered_set, State::pred_unordered_set> closed;
-		std::set<State*> candidates;
+		std::unordered_set<State*>	opened;
+		std::unordered_set<State*>	closed;
+		std::set<State*>			opened_set;
+		std::vector<State*>			candidates;
 };
 

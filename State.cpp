@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 13:58:31 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 15:21:46 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,32 @@ State::State(State* parent, const State::Movement direction) {
 	_weight = 0;
 	_distance = parent->_distance + 1;
 	_movement = direction;
-	//TODO string shifting thing
-	//TODO calculate weight
-	(void)direction;
+
+	int		pos = _data.find(static_cast<char16_t>(0));
+	int		w = State::width;
+	int		h = State::height;
+	switch (_movement)
+	{
+		case Up:
+			if (pos - w >= 0)
+				std::swap(_data.at(pos), _data.at(pos - w));
+			break ;
+		case Left:
+			if (pos % w > 0)
+				std::swap(_data.at(pos), _data.at(pos - 1));
+			break ;
+		case Right:
+			if ((pos + 1) % w > 0)
+				std::swap(_data.at(pos), _data.at(pos + 1));
+			break ;
+		case Down:
+			if (pos + w < (w * h))
+				std::swap(_data.at(pos), _data.at(pos + w));
+			break ;
+		case None:
+			throw std::logic_error("None is not defined");
+			break ;
+	}
 }
 
 std::list<State::Movement>* State::get_movements() const {
@@ -90,23 +113,23 @@ bool State::is_final() const {
 	return (_data == solution);
 }
 
-bool		State::pred_unordered_set(State* a, State* b)
-{
-	return  (a == b);
-}
-
 bool			State::operator<(const State* b) const 
 {
 	std::cout << "operator < of state" << std::endl;
 	return  (_data == b->_data);
 }
 
-size_t	State::hash_unordered_set(const State* a)
+void			State::set_parent(State* p)
 {
-	return  (std::hash<std::u16string>()(a->_data));
+	this->_parent = p;
 }
 
-bool		State::comp_set(State* a, State* b)
+State*			State::get_parent(void) const
 {
-	return  (a->_weight > b->_weight);
+	return (this->_parent);
+}
+
+void 			State::set_distance(int d)
+{
+	this->_distance = d;
 }
