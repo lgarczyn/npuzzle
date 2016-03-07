@@ -24,13 +24,14 @@ class Solver {
 		};
 
 		Solver(State* root);
-		Result Step();
+		Result step();
 		~Solver();
 
 	private:
-		std::unordered_set<State*, State::hash_unordered_set, State::pred_unordered_set> opened;
-		std::unordered_set<State*, State::hash_unordered_set, State::pred_unordered_set> closed;
-		std::set<State*, State::comp_set> candidates;
+		std::unordered_set<State*, std::hash<State*>> opened;
+		std::unordered_set<State*, std::hash<State*>> closed;
+//		std::unordered_set<State*, State::hash_unordered_set, State::pred_unordered_set> closed;
+		std::set<State*> candidates;
 };
 
 #endif //NPUZZLE_SOLVER_H

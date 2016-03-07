@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 16:30:30 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 13:09:19 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ bool			State::operator==(State* b)
 	return  (_data == b->_data);
 }
 
-size_t	State::hash_unordered_set(State*a)
+size_t	State::hash_unordered_set(const State* a)
 {
-	return  (std::hash<std::string>()(a->_data));
+	return  (std::hash<std::u16string>()(a->_data));
 }
 
 bool		State::comp_set(State* a, State* b)

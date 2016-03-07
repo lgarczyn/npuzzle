@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/05 18:52:50 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 13:54:19 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Parser.hpp"
 #include "CliOptParser.hpp"
 #include "Generator.hpp"
+#include "Solver.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -37,7 +38,7 @@ State	*init(int ac, char **av)
 	{
 		if (ac == 1)
 			initial = p.parse_istream(std::cin);
-		else if (ac == 2)
+		else if (ac == 2 && av[1][0] != '-')
 			initial = p.parse_file(av[1]);
 		else
 		{
@@ -61,13 +62,13 @@ State	*init(int ac, char **av)
 			else
 				initial = new State(Generator::gen_random());
 		}
+		State::solution = Generator::gen_solution();
 	}
 	catch (std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
 		exit(1);
 	}
-	State::solution = Generator::gen_solution();
 	return (initial);
 }
 
@@ -90,5 +91,8 @@ int		main(int ac, char **av)
 		std::cerr << av[0] << ": Puzzle is broken" << std::endl;
 		exit(1);
 	}
+	// TODO while !result of stop not good
+	Solver		puzzle(initial);
+	puzzle.step();
 	return (0);
 }

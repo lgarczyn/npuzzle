@@ -10,7 +10,7 @@ Solver::Solver(State* root)
 	candidates.insert(root);
 };
 
-Solver::Result Solver::Step()
+Solver::Result Solver::step()
 {
 	Result result = Result(0, 0);
 
@@ -41,17 +41,21 @@ Solver::Result Solver::Step()
 				}
 				else
 				{
-					if (s->get_distance() < ()->get_distance())
-					{
-						opened->
-					}
+					// TODO: do it!
+					/*
+					   if (s->get_distance() < ()->get_distance())
+					   {
+					   opened->
+					   }
+					   */
 				}
 			}
 		}
 	}
+	return (result);
 }
 
-Solver::~Solver();
+Solver::~Solver() {}
 
 Solver::Result::Result(int timeComplexity, int sizeComplexity):
 	timeComplexity(timeComplexity),

@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 15:03:37 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/04 19:07:01 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/07 13:51:06 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,10 @@ State*			Parser::parse_file(const char* file_src)
 	{
 		res = this->parse_istream(file);
 		file.close();
+	}
+	else
+	{
+		throw std::logic_error(std::string(file_src) + ": Bad file path");
 	}
 	return (res);
 }
