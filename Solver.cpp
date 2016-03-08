@@ -3,21 +3,20 @@
 //
 
 #include "Solver.hpp"
-#include <iostream>
 
 Solver::Solver(State* root)
 {
 	opened.insert(root);
 	opened_set.insert(root);
+	candidates = std::vector<State*>(4);
 }
 
 void	Solver::set_candidates(State* from)
 {
-	candidates.clear();
-	candidates.push_back(new State(from, State::Up));
-	candidates.push_back(new State(from, State::Right));
-	candidates.push_back(new State(from, State::Down));
-	candidates.push_back(new State(from, State::Left));
+	candidates[0] = new State(from, State::Up);
+	candidates[1] = new State(from, State::Right);
+	candidates[2] = new State(from, State::Down);
+	candidates[3] = new State(from, State::Left);
 }
 
 Solver::Result Solver::step()
@@ -42,27 +41,33 @@ Solver::Result Solver::step()
 			set_candidates(e);
 			for (auto s:candidates)
 			{
-				if (opened.find(s) != opened.end()
-						&&  closed.find(s) != closed.end())
+				auto openedEq = opened.find(s);
+				auto closedEq = closed.find(s);
+				bool isPreviousOpened = (openedEq != opened.end());
+				bool isPreviousClosed = (closedEq != closed.end());
+				if (!isPreviousClosed && !isPreviousOpened)
 				{
 					opened.insert(s);
 					opened_set.insert(s);
-					s->set_distance(e->get_distance() + 1);
-					s->set_parent(e->get_parent());
+					s->set_distance(e->get_distance() + 1); // TODO Check if useless
+					s->set_parent(e->get_parent()); // TODO Check if useless
 				}
 				else
 				{
-					if (s->get_distance() > e->get_distance() + 1)
+					State *previous = isPreviousOpened ? *openedEq : *closedEq;
+
+					if (s->get_distance() < previous->get_distance())
 					{
-						s->set_distance(e->get_distance() + 1);
-						s->set_parent(e->get_parent());
-						if (closed.find(s) == closed.end())
+						previous->set_distance(s->get_distance());
+						previous->set_parent(s->get_parent());
+						if (!isPreviousOpened)
 						{
-							opened.insert(s);
-							opened_set.insert(s);
-							closed.erase(s);
+							opened.insert(previous);
+							opened_set.insert(previous);
+							closed.erase(previous);
 						}
 					}
+					delete s;
 				}
 			}
 		}

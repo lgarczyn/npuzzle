@@ -11,26 +11,27 @@
 /* ************************************************************************** */
 
 #include "State.hpp"
-#include "GridPoint.hpp"
-#include <iostream>
 
 int					State::width = 0;
 int					State::height = 0;
 std::u16string		State::solution;
 std::vector<int>	State::order;
 
+#include "tools.h" // TODO Delete me
 State::State(const std::u16string &data) {
 	_data = data;
-	_weight = 0;
+	_weight = Heuristics::ManhattanDistance(_data, State::solution, State::width);
 	_distance = 0;
 	_movement = None;
 	_parent = NULL;
+
+	print_map(_data);
+	std::cout << "Score: " << _weight << std::endl << std::endl;
 }
 
 State::State(State* parent, const State::Movement direction) {
 	_data = parent->_data;
 	_parent = parent;
-	_weight = std::rand();
 	_distance = parent->_distance + 1;
 	_movement = direction;
 
@@ -59,6 +60,9 @@ State::State(State* parent, const State::Movement direction) {
 			throw std::logic_error("None is not defined");
 			break ;
 	}
+	_weight = Heuristics::ManhattanDistance(_data, State::solution, State::width);
+	print_map(_data);
+	std::cout << "Score: " << _weight << std::endl << std::endl;
 }
 
 std::list<State::Movement>* State::get_movements() const {

@@ -17,10 +17,6 @@
 #include "Generator.hpp"
 #include "Solver.hpp"
 
-#include <cstdlib>
-#include <iostream>
-#include <ctime>
-
 int		display_help(const char* path = "npuzzle")
 {
 	std::cout << "Usage: " << path << " [-w WIDTH] [-i ITERATION] [-s] [-u] [FILE]" << std::endl;
@@ -28,7 +24,7 @@ int		display_help(const char* path = "npuzzle")
 	return (0);
 }
 
-State	*init(int ac, char **av)
+State	*parse_args(int ac, char **av)
 {
 	try
 	{
@@ -79,7 +75,7 @@ int		main(int ac, char **av)
 {
 	State*	initial;
 
-	initial = init(ac, av);
+	initial = parse_args(ac, av);
 	if (initial->is_solvable() == State::Valid)
 	{
 		std::cout << av[0] << ": Puzzle is solvable" << std::endl;
@@ -94,8 +90,10 @@ int		main(int ac, char **av)
 		std::cerr << av[0] << ": Puzzle is broken" << std::endl;
 		exit(1);
 	}
-	// TODO while !result of stop not good
 	Solver		puzzle(initial);
-	puzzle.step();
+	while (!puzzle.step().finished)
+	{
+
+	}
 	return (0);
 }
