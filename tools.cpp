@@ -37,13 +37,16 @@ bool is_number(const std::string& s)
 
 void	print_map(const std::u16string& d)
 {
-	int		ww = State::width;
-	int		hh = State::height;
+	int		width = State::width;
+	int		height = State::height;
 
-	for (int h = 0; h < hh; ++h)
+	for (int y = 0; y < height; ++y)
 	{
-		for (int w = 0; w < ww; ++w)
-			std::cout << d.at(w + h * hh) << " ";
+		for (int x = 0; x < width; ++x)
+		{
+			std::string val = std::to_string(d.at(x + y * height));
+			std::cout << val << std::string(4 - val.length(), ' ');
+		}
 		std::cout << std::endl;
 	}
 }

@@ -16,11 +16,14 @@ int	Generator::iteration = 42;
 
 std::u16string	Generator::gen_solution(int w, int h)
 {
+
 	char16_t		max = w * h;
 	std::u16string	data(max, static_cast<char16_t>('\0'));
 
-	for (auto x:State::order)
-		data[State::order[x]] = (x + 1) % max;
+	for (int i = 0; i < max; i++)
+	{
+		data[State::order[i]] = (i + 1) % max;
+	}
 	return (data);
 }
 void			Generator::random_iteration(std::u16string& data, int w, int h)
@@ -56,18 +59,16 @@ std::u16string	Generator::gen_solvable(Parser::ParseResult& p)
 {
 	std::u16string data;
 
-	data = gen_solution(p.width, p.height);
+	data = State::solution;
 	random_iteration(data, p.width, p.height);
 	return (data);
 }
-
-#include "tools.h"
 
 std::u16string	Generator::gen_unsolvable(Parser::ParseResult& p)
 {
 	std::u16string data;
 
-	data = gen_solution(p.width, p.height);
+	data = State::solution;
 	std::swap(data.at(0), data.at(1));
 	random_iteration(data, p.width, p.height);
 	return (data);

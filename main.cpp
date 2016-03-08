@@ -16,6 +16,7 @@
 #include "CliOptParser.hpp"
 #include "Generator.hpp"
 #include "Solver.hpp"
+#include "tools.h"
 
 int		display_help(const char* path = "npuzzle")
 {
@@ -30,6 +31,7 @@ State	*parse_args(int ac, char **av)
 	{
 		Parser				p;
 		Parser::ParseResult	result;
+		bool 				shouldGenerate = false;
 
 		std::srand(std::time(0));
 		if (ac == 1)
@@ -46,14 +48,20 @@ State	*parse_args(int ac, char **av)
 			if (is_cmd_opt(av, av + ac, "-w"))
 				result.width = std::stoi(get_cmd_opt(av, av + ac, "-w"));
 			else
-				result.width = std::rand() % 16 + 3;
+				result.width = 9;//std::rand() % 16 + 3;
 			if (result.width < 3)
 			{
 				std::cerr << av[0] << ": width too small" << std::endl;
 				exit(1);
 			}
 			result.height = result.width; // TODO Make rectangular map
-			State::init(result.width, result.width);
+			shouldGenerate = true;
+		}
+
+		State::init(result.width, result.width);
+
+		if (shouldGenerate)
+		{
 			if (is_cmd_opt(av, av + ac, "-s"))
 				result.data = Generator::gen_solvable(result);
 			else if (is_cmd_opt(av, av + ac, "-u"))
@@ -61,7 +69,6 @@ State	*parse_args(int ac, char **av)
 			else
 				result.data = Generator::gen_random(result);
 		}
-		State::init(result.width, result.width);
 		return (new State(result.data));
 	}
 	catch (std::exception& e)
@@ -71,12 +78,12 @@ State	*parse_args(int ac, char **av)
 	}
 }
 
-#include "tools.h"
 int		main(int ac, char **av)
 {
 	State*	initial;
 
 	initial = parse_args(ac, av);
+
 	if (initial->is_solvable() == State::Valid)
 	{
 		std::cout << av[0] << ": Puzzle is solvable" << std::endl;
@@ -91,26 +98,17 @@ int		main(int ac, char **av)
 		std::cerr << av[0] << ": Puzzle is broken" << std::endl;
 		exit(1);
 	}
-
-	print_map(State::solution);
-	for (auto x:State::order)
-		std::cout << x << ' ';
-	std::cout << std::endl;
-	return (0);
 	std::cout << "Start" << std::endl;
 	print_map(initial->get_data());
 	Solver		puzzle(initial);
 	Solver::Result	res(0,0);
 	size_t 	it;
-	size_t  ite;
 	int 	niv;
 	it = 0;
-	ite = 0;
 	while (!(res = puzzle.step()).finished)
 	{
-		if (it >= ite)
+		if (it % 10000 == 0)
 		{
-			ite += 1000;
 			niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 			std::cout << "Iteration count: " << it << std::endl;
 			std::cout << "Solution: " << niv << "%" << std::endl;

@@ -161,7 +161,7 @@ std::vector<int> get_order(int w, int h)
 	State::Movement	dir = State::Right;
 	std::u16string	data(max, static_cast<char16_t>('\0'));
 
-	while (c != max)
+	while (c <= max)
 	{
 		data[pos] = c;
 		order[orderIndex++] = pos;
