@@ -71,6 +71,7 @@ State	*parse_args(int ac, char **av)
 	}
 }
 
+#include "tools.h"
 int		main(int ac, char **av)
 {
 	State*	initial;
@@ -90,10 +91,37 @@ int		main(int ac, char **av)
 		std::cerr << av[0] << ": Puzzle is broken" << std::endl;
 		exit(1);
 	}
-	Solver		puzzle(initial);
-	while (!puzzle.step().finished)
-	{
 
+	print_map(State::solution);
+	for (auto x:State::order)
+		std::cout << x << ' ';
+	std::cout << std::endl;
+	return (0);
+	std::cout << "Start" << std::endl;
+	print_map(initial->get_data());
+	Solver		puzzle(initial);
+	Solver::Result	res(0,0);
+	size_t 	it;
+	size_t  ite;
+	int 	niv;
+	it = 0;
+	ite = 0;
+	while (!(res = puzzle.step()).finished)
+	{
+		if (it >= ite)
+		{
+			ite += 1000;
+			niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+			std::cout << "Iteration count: " << it << std::endl;
+			std::cout << "Solution: " << niv << "%" << std::endl;
+			print_map(res.actual_state->get_data());
+		}
+		++it;
 	}
+	niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+	std::cout << "-- Iteration count: " << it << std::endl;
+	std::cout << "-- Solution: " << niv << "%" << std::endl;
+	std::cout << "-- Move count: " << res.movements->size() << std::endl;
+	print_map(res.actual_state->get_data());
 	return (0);
 }

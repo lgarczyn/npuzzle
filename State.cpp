@@ -15,18 +15,16 @@
 int					State::width = 0;
 int					State::height = 0;
 std::u16string		State::solution;
+score				State::solution_score = 0;
+score				State::initial_score = 0;
 std::vector<int>	State::order;
 
-#include "tools.h" // TODO Delete me
 State::State(const std::u16string &data) {
 	_data = data;
-	_weight = Heuristics::ManhattanDistance(_data, State::solution, State::width);
+	_weight = Heuristics::HeuristicFunction(_data, State::solution, State::width);
 	_distance = 0;
 	_movement = None;
-	_parent = NULL;
-
-	print_map(_data);
-	std::cout << "Score: " << _weight << std::endl << std::endl;
+	_parent = nullptr;
 }
 
 State::State(State* parent, const State::Movement direction) {
@@ -60,9 +58,7 @@ State::State(State* parent, const State::Movement direction) {
 			throw std::logic_error("None is not defined");
 			break ;
 	}
-	_weight = Heuristics::ManhattanDistance(_data, State::solution, State::width);
-	print_map(_data);
-	std::cout << "Score: " << _weight << std::endl << std::endl;
+	_weight = Heuristics::HeuristicFunction(_data, State::solution, State::width);
 }
 
 std::list<State::Movement>* State::get_movements() const {
@@ -168,6 +164,8 @@ std::vector<int> get_order(int w, int h)
 	while (c != max)
 	{
 		data[pos] = c;
+		order[orderIndex++] = pos;
+		++c;
 		switch (dir)
 		{
 			case State::Right:
@@ -193,8 +191,6 @@ std::vector<int> get_order(int w, int h)
 			default:
 				break;
 		}
-		++c;
-		order[orderIndex++] = pos;
 	}
 	return (order);
 }
@@ -205,4 +201,5 @@ void			State::init(int width, int height)
 	State::height = height;
 	State::order = get_order(width, height);
 	State::solution = Generator::gen_solution(width, height);
+	State::solution_score = Heuristics::HeuristicFunction(State::solution, State::solution, width);
 }

@@ -25,6 +25,8 @@ public:
 	static int width;
 	static int height;
 	static std::u16string solution;
+	static score solution_score;
+	static score initial_score;
 	static std::vector<int> order;
 
 		enum Movement {

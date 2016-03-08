@@ -6,6 +6,7 @@
 
 Solver::Solver(State* root)
 {
+	State::initial_score = root->get_weight();
 	opened.insert(root);
 	opened_set.insert(root);
 	candidates = std::vector<State*>(4);
@@ -27,6 +28,7 @@ Solver::Result Solver::step()
 	{
 		State* e = *opened_set.begin();
 
+		result.actual_state = e;
 		if (e->is_final())
 		{
 			result.finished = true;
@@ -49,8 +51,6 @@ Solver::Result Solver::step()
 				{
 					opened.insert(s);
 					opened_set.insert(s);
-					s->set_distance(e->get_distance() + 1); // TODO Check if useless
-					s->set_parent(e->get_parent()); // TODO Check if useless
 				}
 				else
 				{
@@ -80,6 +80,8 @@ Solver::~Solver() {}
 Solver::Result::Result(int timeComplexity, int sizeComplexity):
 	timeComplexity(timeComplexity),
 	sizeComplexity(sizeComplexity),
+	actual_state(nullptr),
 	movements(nullptr),
 	finished(false)
-{}
+{
+}

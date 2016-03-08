@@ -1,8 +1,10 @@
 //
-// Created by Louis GARCZYNSKI on 3/4/16.
+// created by louis garczynski on 3/4/16.
 //
 
 #include "Heuristics.hpp"
+
+weighter Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
 
 score Heuristics::ManhattanDistance(const std::u16string& data, const std::u16string& solution, int width)
 {
@@ -12,11 +14,13 @@ score Heuristics::ManhattanDistance(const std::u16string& data, const std::u16st
     for (int i = 0; i < length; i++)
     {
         uint16_t val = data[i];
-        int dist =  GridPoint::ManDistance(i, solution.find(val), width);
+        int dist =  GridPoint::ManDistance(i, static_cast<int>(solution.find(val)), width);
         score += maxdist - dist;
     }
     return (score);
 }
+
+#include "State.hpp"
 
 score Heuristics::SmartDistance(const std::u16string& data, const std::u16string& solution, int width)
 {
@@ -26,7 +30,8 @@ score Heuristics::SmartDistance(const std::u16string& data, const std::u16string
     for (int i = 0; i < length; i++)
     {
         uint16_t val = data[i];
-        int dist =  GridPoint::ManDistance(i, solution.find(val), width);
+        // TODO Use State::order
+        int dist =  GridPoint::ManDistance(i, static_cast<int>(solution.find(val)), width);
         score += maxdist - dist;
         if (dist != 0)
         {

@@ -35,7 +35,7 @@ bool is_number(const std::string& s)
 			[](char c) { return !std::isdigit(c); }) == s.end();
 }
 
-void	print_map(std::u16string& d)
+void	print_map(const std::u16string& d)
 {
 	int		ww = State::width;
 	int		hh = State::height;

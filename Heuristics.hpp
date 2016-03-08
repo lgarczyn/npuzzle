@@ -14,9 +14,11 @@ using weighter = score (*)(const std::u16string& data, const std::u16string& sol
 class Heuristics
 {
 public:
-    static score ManhattanDistance(const std::u16string& data, const std::u16string& solution, int width);
-    static score SmartDistance(const std::u16string& data, const std::u16string& solution, int width);
-    static score SuperSmartDistance(const std::u16string& data, const std::u16string& solution, int width);
+    static score	ManhattanDistance(const std::u16string& data, const std::u16string& solution, int width);
+    static score	SmartDistance(const std::u16string& data, const std::u16string& solution, int width);
+    static score	SuperSmartDistance(const std::u16string& data, const std::u16string& solution, int width);
+
+	static weighter	HeuristicFunction;
 };
 
 

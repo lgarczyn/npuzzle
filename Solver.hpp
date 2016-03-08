@@ -17,6 +17,7 @@ class Solver {
 			public:
 				int timeComplexity;
 				int sizeComplexity;
+				State*	actual_state;
 				std::list<State::Movement>* movements;
 				bool finished;
 				Result(int timeComplexity, int sizeComplexity);
@@ -31,7 +32,7 @@ class Solver {
 	private:
 		std::unordered_set<State*>	opened;
 		std::unordered_set<State*>	closed;
-		std::multiset<State*>			opened_set;
+		std::multiset<State*>		opened_set;
 		std::vector<State*>			candidates;
 };
 

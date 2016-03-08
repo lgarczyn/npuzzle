@@ -20,7 +20,7 @@ std::u16string	Generator::gen_solution(int w, int h)
 	std::u16string	data(max, static_cast<char16_t>('\0'));
 
 	for (auto x:State::order)
-		data[State::order[x]] = (x + 2) % max;
+		data[State::order[x]] = (x + 1) % max;
 	return (data);
 }
 void			Generator::random_iteration(std::u16string& data, int w, int h)

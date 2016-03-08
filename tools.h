@@ -19,4 +19,4 @@ void split(const std::string& str,
 		std::vector<std::string>& tokens,
 		const std::string& delimiters = " ");
 bool is_number(const std::string& s);
-void	print_map(std::u16string& d);
+void	print_map(const std::u16string& d);
