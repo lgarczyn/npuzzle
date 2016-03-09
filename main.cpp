@@ -40,6 +40,12 @@ State	*parse_args(int ac, char **av)
 			result = p.parse_file(av[1]);
 		else
 		{
+			if (is_cmd_opt(av, av + ac, "-f1"))
+				Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
+			if (is_cmd_opt(av, av + ac, "-f2"))
+				Heuristics::HeuristicFunction = Heuristics::SmartDistance;
+			if (is_cmd_opt(av, av + ac, "-f3"))
+				Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
 			if (is_cmd_opt(av, av + ac, "-h"))
 				exit(display_help(av[0]));
 			if (is_cmd_opt(av, av + ac, "-i"))
