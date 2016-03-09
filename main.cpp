@@ -21,7 +21,7 @@
 int		display_help(const char* path = "npuzzle")
 {
 	std::cout << "Usage: " << path << " [-h] [-w WIDTH] [-i ITERATION] [-s] [-u] [-f1] [-f2] [-f3] [-c MIN_STEP] [-m FILE]" << std::endl;
-	std::cout << "if not params is give, programe should use stdin." << std::endl;
+	std::cout << "if no map is give, npuzzle should use stdin." << std::endl;
 	return (0);
 }
 
