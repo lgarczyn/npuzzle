@@ -19,7 +19,7 @@ score Heuristics::ManhattanDistance(const std::u16string& data, const std::u16st
     for (int i = 0; i < length; i++)
     {
         val = data[i];
-        int dist =  GridPoint::ManDistance(i, static_cast<int>(finder[val]), width);
+        int dist =  GridPoint::ManDistance(i, finder[val], width);
         score += maxdist - dist;
     }
     return (score);
@@ -37,11 +37,11 @@ score Heuristics::SmartDistance(const std::u16string& data, const std::u16string
     for (int i = 0; i < length; i++)
     {
         val = data[i];
-        int dist =  GridPoint::ManDistance(i, static_cast<int>(finder[val]), width);
+        int dist =  GridPoint::ManDistance(i, finder[val], width);
         score += maxdist - dist;
     }
     val = 0;
-    int tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), static_cast<int>(finder[val]), width);
+    int tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), finder[val], width);
     score += tmp;
     return (score);
 }
