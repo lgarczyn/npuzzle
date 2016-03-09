@@ -23,9 +23,9 @@ class	Parser
 		{
 		public:
 			std::u16string data;
-			int width;
-			int height;
-
+			int		width;
+			int		height;
+			bool	shouldGenerate;
 			ParseResult();
 		};
 

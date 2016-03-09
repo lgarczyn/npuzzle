@@ -25,48 +25,50 @@ int		display_help(const char* path = "npuzzle")
 	return (0);
 }
 
+Parser::ParseResult	get_result(int ac, char **av)
+{
+	Parser::ParseResult	result;
+	Parser				p;
+
+	if (is_cmd_opt(av, av + ac, "-m")) {
+		std::cout << "READ M" << std::endl;
+		result = p.parse_file(get_cmd_opt(av, av + ac, "-m"));
+	}
+	else if (is_cmd_opt(av, av + ac, "-w")) {
+		result.width = std::stoi(get_cmd_opt(av, av + ac, "-w"));
+		if (result.width < 3) {
+			std::cerr << av[0] << ": width too small" << std::endl;
+			exit(1);
+		}
+		result.height = result.width; // TODO Make rectangular map
+		result.shouldGenerate = true;
+	}
+	else
+		result = p.parse_istream(std::cin);
+	return (result);
+}
+
 State	*parse_args(int ac, char **av)
 {
-	try
-	{
-		Parser				p;
-		Parser::ParseResult	result;
-		bool 				shouldGenerate = false;
+	try {
+		Parser::ParseResult result;
 
 		std::srand(std::time(0));
-		if (ac == 1)
-			result = p.parse_istream(std::cin);
-		else if (ac == 2 && av[1][0] != '-')
-			result = p.parse_file(av[1]);
-		else
-		{
-			if (is_cmd_opt(av, av + ac, "-f1"))
-				Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
-			if (is_cmd_opt(av, av + ac, "-f2"))
-				Heuristics::HeuristicFunction = Heuristics::SmartDistance;
-			if (is_cmd_opt(av, av + ac, "-f3"))
-				Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
-			if (is_cmd_opt(av, av + ac, "-h"))
-				exit(display_help(av[0]));
-			if (is_cmd_opt(av, av + ac, "-i"))
-				Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));
-
-			if (is_cmd_opt(av, av + ac, "-w"))
-				result.width = std::stoi(get_cmd_opt(av, av + ac, "-w"));
-			else
-				result.width = 9;//std::rand() % 16 + 3;
-			if (result.width < 3)
-			{
-				std::cerr << av[0] << ": width too small" << std::endl;
-				exit(1);
-			}
-			result.height = result.width; // TODO Make rectangular map
-			shouldGenerate = true;
-		}
+		if (is_cmd_opt(av, av + ac, "-h"))
+			exit(display_help(av[0]));
+		if (is_cmd_opt(av, av + ac, "-f1"))
+			Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
+		if (is_cmd_opt(av, av + ac, "-f2"))
+			Heuristics::HeuristicFunction = Heuristics::SmartDistance;
+		if (is_cmd_opt(av, av + ac, "-f3"))
+			Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
+		result = get_result(ac, av);
+		if (is_cmd_opt(av, av + ac, "-i"))
+			Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));
 
 		State::init(result.width, result.width);
 
-		if (shouldGenerate)
+		if (result.shouldGenerate)
 		{
 			if (is_cmd_opt(av, av + ac, "-s"))
 				result.data = Generator::gen_solvable(result);
