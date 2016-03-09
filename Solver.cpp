@@ -33,9 +33,9 @@ Solver::Result Solver::step()
 		{
 			result.finished = true;
 			result.movements = e->get_movements();
-			return (result);
+			//return (result);
 		}
-		else
+	//	else
 		{
 			opened.erase(e);
 			opened_set.erase(opened_set.begin());

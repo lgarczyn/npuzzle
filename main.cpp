@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 19:28:36 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/09 17:45:41 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 
 int		display_help(const char* path = "npuzzle")
 {
-	std::cout << "Usage: " << path << " [-w WIDTH] [-i ITERATION] [-s] [-u] [FILE]" << std::endl;
+	std::cout << "Usage: " << path << " [-h] [-w WIDTH] [-i ITERATION] [-s] [-u] [-f1] [-f2] [-f3] [-c MIN_STEP] [-m FILE]" << std::endl;
 	std::cout << "if not params is give, programe should use stdin." << std::endl;
 	return (0);
 }
@@ -48,11 +48,10 @@ Parser::ParseResult	get_result(int ac, char **av)
 	return (result);
 }
 
-State	*parse_args(int ac, char **av)
+Parser::ParseResult	parse_args(int ac, char **av)
 {
+	Parser::ParseResult result;
 	try {
-		Parser::ParseResult result;
-
 		std::srand(std::time(0));
 		if (is_cmd_opt(av, av + ac, "-h"))
 			exit(display_help(av[0]));
@@ -66,6 +65,8 @@ State	*parse_args(int ac, char **av)
 		if (is_cmd_opt(av, av + ac, "-i"))
 			Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));
 
+		if (is_cmd_opt(av, av + ac, "-c"))
+			sscanf(get_cmd_opt(av, av + ac, "-c"), "%zu", &result.search_step);
 		State::init(result.width, result.width);
 
 		if (result.shouldGenerate)
@@ -77,7 +78,7 @@ State	*parse_args(int ac, char **av)
 			else
 				result.data = Generator::gen_random(result);
 		}
-		return (new State(result.data));
+		return (result);
 	}
 	catch (std::exception& e)
 	{
@@ -88,10 +89,11 @@ State	*parse_args(int ac, char **av)
 
 int		main(int ac, char **av)
 {
-	State*	initial;
+	State*					initial;
+	Parser::ParseResult		result;
 
-	initial = parse_args(ac, av);
-
+	result = parse_args(ac, av);
+	initial = new State(result.data);
 	if (initial->is_solvable() == State::Valid)
 	{
 		std::cout << av[0] << ": Puzzle is solvable" << std::endl;
@@ -112,22 +114,25 @@ int		main(int ac, char **av)
 	Solver::Result	res(0,0);
 	size_t 	it;
 	int 	niv;
+
 	it = 0;
-	while (!(res = puzzle.step()).finished)
-	{
-		if (it % 10000 == 0)
+	do {
+		while (!(res = puzzle.step()).finished)
 		{
-			niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
-			std::cout << "Iteration count: " << it << std::endl;
-			std::cout << "Solution [score: " << res.actual_state->get_weight() << "]: " << niv << "%" << std::endl;
-			print_map(res.actual_state->get_data());
+			if (it % 10000 == 0)
+			{
+				niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+				std::cout << "Iteration count: " << it << std::endl;
+				std::cout << "Solution [score: " << res.actual_state->get_weight() << "]: " << niv << "%" << std::endl;
+				print_map(res.actual_state->get_data());
+			}
+			++it;
 		}
-		++it;
-	}
-	niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
-	std::cout << "-- Iteration count: " << it << std::endl;
-	std::cout << "-- Solution: " << niv << "%" << std::endl;
-	std::cout << "-- Move count: " << res.movements->size() << std::endl;
-	print_map(res.actual_state->get_data());
+		niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+		std::cout << "-- Iteration count: " << it << std::endl;
+		std::cout << "-- Solution: " << niv << "%" << std::endl;
+		std::cout << "-- Move count: " << res.movements->size() << std::endl;
+		print_map(res.actual_state->get_data());
+	} while ((result.search_step && result.search_step < res.movements->size()));
 	return (0);
 }

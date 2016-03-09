@@ -26,6 +26,8 @@ class	Parser
 			int		width;
 			int		height;
 			bool	shouldGenerate;
+			size_t 	search_step;
+
 			ParseResult();
 		};
 

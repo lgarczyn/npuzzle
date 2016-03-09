@@ -15,7 +15,7 @@
 #include <fstream>
 #include <regex>
 
-Parser::ParseResult::ParseResult():data(), width(0), shouldGenerate(false){};
+Parser::ParseResult::ParseResult():data(), width(0), shouldGenerate(false), search_step(0){};
 
 Parser::ParseResult	Parser::parse_file(const char* file_src)
 {
