@@ -4,7 +4,7 @@
 
 #include "Solver.hpp"
 
-Solver::Solver(State* root)
+Solver::Solver(State* root) : opened(1e6), closed(1e6)
 {
 	State::initial_score = root->get_weight();
 	opened.insert(root);
