@@ -4,7 +4,7 @@
 
 #include "Heuristics.hpp"
 
-weighter Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
+weighter Heuristics::HeuristicFunction = Heuristics::SmartDistance;
 
 score Heuristics::ManhattanDistance(const std::u16string& data, const std::u16string& solution, int width)
 {
@@ -27,16 +27,22 @@ score Heuristics::SmartDistance(const std::u16string& data, const std::u16string
     int score = 0;
     int maxdist = width + width - 2;
     int length = data.length();
+    int live = 0;
+
     for (int counter = 0; counter < length; counter++)
     {
         int i = State::order[counter];
         uint16_t val = data[i];
         int dist =  GridPoint::ManDistance(i, static_cast<int>(solution.find(val)), width);
         score += maxdist - dist;
-        if (dist > 0)
+        if (dist > 0 && val != 0)
         {
-            return (score);
+            if (!live)
+                return (score);
+            else
+                --live;
         }
+        ++live;
     }
     return (score);
 }

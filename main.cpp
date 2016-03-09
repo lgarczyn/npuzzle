@@ -111,7 +111,7 @@ int		main(int ac, char **av)
 		{
 			niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 			std::cout << "Iteration count: " << it << std::endl;
-			std::cout << "Solution: " << niv << "%" << std::endl;
+			std::cout << "Solution [score: " << res.actual_state->get_weight() << "]: " << niv << "%" << std::endl;
 			print_map(res.actual_state->get_data());
 		}
 		++it;
