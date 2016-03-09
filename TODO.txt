@@ -1,0 +1,12 @@
+//BONUS DONE
+* max steps
+* current state display
+
+//TODO
+* last heuristics
+
+//BONUS OFFICIAL
+* g() et h() ?
+
+//BONUS PERSO
+* rectangle

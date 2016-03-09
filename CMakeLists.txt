@@ -1,5 +1,8 @@
 project(NPuzzle)
 
+set(CMAKE_CONFIGURATION_TYPES "Debug" CACHE STRING "" FORCE) # setting two custom
+# configuration types
+
 set(SRCS
 	main.cpp
 	Parser.cpp
