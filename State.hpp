@@ -26,6 +26,7 @@ public:
 	static int height;
 	static std::u16string solution;
 	static score solution_score;
+	static std::vector<int>	solution_finder;
 	static score initial_score;
 	static std::vector<int> order;
 

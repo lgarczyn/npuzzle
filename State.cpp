@@ -16,6 +16,7 @@ int					State::width = 0;
 int					State::height = 0;
 std::u16string		State::solution;
 score				State::solution_score = 0;
+std::vector<int>	State::solution_finder;
 score				State::initial_score = 0;
 std::vector<int>	State::order;
 
@@ -195,11 +196,21 @@ std::vector<int> get_order(int w, int h)
 	return (order);
 }
 
+std::vector<int> gen_finder(std::u16string& sol)
+{
+	int     length = sol.length();
+	std::vector<int> v(length);
+
+	for (int i = 0; i < length; ++i)
+		v[sol.at(i)] = i;
+	return (v);
+}
 void			State::init(int width, int height)
 {
 	State::width = width;
 	State::height = height;
 	State::order = get_order(width, height);
 	State::solution = Generator::gen_solution(width, height);
+	State::solution_finder = gen_finder(State::solution);
 	State::solution_score = Heuristics::HeuristicFunction(State::solution, State::solution, width);
 }

@@ -3,47 +3,46 @@
 //
 
 #include "Heuristics.hpp"
+#include "State.hpp"
 
-weighter Heuristics::HeuristicFunction = Heuristics::SmartDistance;
+weighter Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
 
 score Heuristics::ManhattanDistance(const std::u16string& data, const std::u16string& solution, int width)
 {
     int score = 0;
     int maxdist = width + width - 2;
     int length = data.length();
+    std::vector<int>&   finder = State::solution_finder;
+    uint16_t val;
+
+    (void)solution;
     for (int i = 0; i < length; i++)
     {
-        uint16_t val = data[i];
-        int dist =  GridPoint::ManDistance(i, static_cast<int>(solution.find(val)), width);
+        val = data[i];
+        int dist =  GridPoint::ManDistance(i, static_cast<int>(finder[val]), width);
         score += maxdist - dist;
     }
     return (score);
 }
-
-#include "State.hpp"
 
 score Heuristics::SmartDistance(const std::u16string& data, const std::u16string& solution, int width)
 {
     int score = 0;
     int maxdist = width + width - 2;
     int length = data.length();
-    int live = 0;
+    std::vector<int>&   finder = State::solution_finder;
+    uint16_t    val;
 
-    for (int counter = 0; counter < length; counter++)
+    (void)solution;
+    for (int i = 0; i < length; i++)
     {
-        int i = State::order[counter];
-        uint16_t val = data[i];
-        int dist =  GridPoint::ManDistance(i, static_cast<int>(solution.find(val)), width);
+        val = data[i];
+        int dist =  GridPoint::ManDistance(i, static_cast<int>(finder[val]), width);
         score += maxdist - dist;
-        if (dist > 0 && val != 0)
-        {
-            if (!live)
-                return (score);
-            else
-                --live;
-        }
-        ++live;
     }
+    val = 0;
+    int tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), static_cast<int>(finder[val]), width);
+    score += tmp;
     return (score);
 }
 
