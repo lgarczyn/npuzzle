@@ -1,6 +1,8 @@
 *.DS_Store
 ._*
 
+.gitignore
+
 puzzle/*.txt
 
 npuzzle
