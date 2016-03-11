@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 19:22:49 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/11 11:06:15 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ std::vector<int>	State::order;
 
 State::State(const std::u16string &data) {
 	_data = data;
-	_weight = Heuristics::HeuristicFunction(_data, State::solution, State::width);
+	_weight = Heuristics::HeuristicFunction(_data, State::width);
 	_distance = 0;
 	_movement = None;
 	_parent = nullptr;
@@ -33,6 +33,7 @@ State::State(State* parent, const State::Movement direction) {
 	_parent = parent;
 	_distance = parent->_distance + 1;
 	_movement = direction;
+	_weight = parent->get_weight();
 
 	int		pos = _data.find(static_cast<char16_t>(0));
 	int		w = State::width;
@@ -41,25 +42,24 @@ State::State(State* parent, const State::Movement direction) {
 	{
 		case Up:
 			if (pos - w >= 0)
-				std::swap(_data.at(pos), _data.at(pos - w));
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - w);
 			break ;
 		case Left:
 			if (pos % w > 0)
-				std::swap(_data.at(pos), _data.at(pos - 1));
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - 1);
 			break ;
 		case Right:
 			if ((pos + 1) % w > 0)
-				std::swap(_data.at(pos), _data.at(pos + 1));
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + 1);
 			break ;
 		case Down:
 			if (pos + w < (w * h))
-				std::swap(_data.at(pos), _data.at(pos + w));
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + w);
 			break ;
 		case None:
 			throw std::logic_error("None is not defined");
 			break ;
 	}
-	_weight = Heuristics::HeuristicFunction(_data, State::solution, State::width);
 }
 
 std::vector<State::Movement>* State::get_movements() const {
@@ -227,5 +227,5 @@ void			State::init(int width, int height)
 	State::order = get_order(width, height);
 	State::solution = Generator::gen_solution(width, height);
 	State::solution_finder = gen_finder(State::solution);
-	State::solution_score = Heuristics::HeuristicFunction(State::solution, State::solution, width);
+	State::solution_score = Heuristics::HeuristicFunction(State::solution, width);
 }
