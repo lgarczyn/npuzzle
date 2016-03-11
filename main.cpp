@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/09 17:45:41 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/11 11:43:36 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "Solver.hpp"
 #include "tools.h"
 #include <iostream>
+#include <termcap.h>
 
 int		display_help(const char* path = "npuzzle")
 {
@@ -53,7 +54,12 @@ Parser::ParseResult	parse_args(int ac, char **av)
 {
 	Parser::ParseResult result;
 	try {
+		char	buf[255];
+		// INIT
 		std::srand(std::time(0));
+		tgetent(buf, getenv("TERM"));
+
+		// ARGS
 		if (is_cmd_opt(av, av + ac, "-h"))
 			exit(display_help(av[0]));
 		if (is_cmd_opt(av, av + ac, "-f1"))
@@ -105,18 +111,20 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 		{
 			if (it % 10000 == 0)
 			{
+				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+				print_map(solverResult.actual_state->get_data(), State::solution);
 				std::cout << "Iteration count: " << it << std::endl;
 				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]: " << niv << "%" << std::endl;
-				print_map(solverResult.actual_state->get_data(), State::solution);
 			}
 			++it;
 		}
+		std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 		niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+		print_map(solverResult.actual_state->get_data(), State::solution);
 		std::cout << "-- Iteration count: " << it << std::endl;
 		std::cout << "-- Solution: " << niv << "%" << std::endl;
 		std::cout << "-- Move count: " << solverResult.movements->size() << std::endl;
-		print_map(solverResult.actual_state->get_data(), State::solution);
 	} while ((parseResult.search_step && solverResult.movements->size() > parseResult.search_step));
 
 	return (solverResult);
@@ -149,6 +157,7 @@ int		main(int ac, char **av)
 	bool displayHelp = true;
 	while (1)
 	{
+		char	c;
 		if (displayHelp)
 			std::cout << "Press:" << std::endl
 				<< "\t[q] to quit" << std::endl
@@ -158,11 +167,13 @@ int		main(int ac, char **av)
 				<< std::endl << std::flush;
 
 		displayHelp = true;
-		switch(std::getchar())
+		c = std::getchar();
+		switch(c)
 		{
 			case 'q':
 				exit(0);
 			case 'd':
+				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				std::cout
 				<< "Total number of states selected: " << solverResult.sizeComplexity << std::endl
 				<< "Max number of states in memory: " << solverResult.timeComplexity << std::endl
@@ -177,12 +188,14 @@ int		main(int ac, char **av)
 				std::cout << std::endl << std::flush;
 				break;
 			case 'a': {
+				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				State *current = new State(initial->get_data());
 
 				for (auto &x:*solverResult.movements) {
+					std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 					print_map(current->get_data(), State::solution);
 					std::cout << std::endl;
-					usleep(500000);
+					usleep(100000);
 
 					State *tmp = new State(current, x);
 					delete current;
