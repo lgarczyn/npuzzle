@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/11 11:06:15 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/11 17:30:12 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,23 +37,18 @@ State::State(State* parent, const State::Movement direction) {
 
 	int		pos = _data.find(static_cast<char16_t>(0));
 	int		w = State::width;
-	int		h = State::height;
 	switch (_movement)
 	{
 		case Up:
-			if (pos - w >= 0)
 				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - w);
 			break ;
 		case Left:
-			if (pos % w > 0)
 				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - 1);
 			break ;
 		case Right:
-			if ((pos + 1) % w > 0)
 				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + 1);
 			break ;
 		case Down:
-			if (pos + w < (w * h))
 				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + w);
 			break ;
 		case None:
@@ -165,6 +160,10 @@ score 						State::get_weight(void) const
 void 						State::set_weight(score s)
 {
 	this->_weight = s;
+}
+
+State::Movement						State::get_movement() const {
+	return (this->_movement);
 }
 
 std::vector<int> get_order(int w, int h)
