@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/10 19:24:14 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/11 11:06:15 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,19 @@ State::State(State* parent, const State::Movement direction) {
 	{
 		case Up:
 			if (pos - w >= 0)
-				_weight += Heuristics::SmartDistanceSwap(_data, State::width, pos, pos - w);
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - w);
 			break ;
 		case Left:
 			if (pos % w > 0)
-				_weight += Heuristics::SmartDistanceSwap(_data, State::width, pos, pos - 1);
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - 1);
 			break ;
 		case Right:
 			if ((pos + 1) % w > 0)
-				_weight += Heuristics::SmartDistanceSwap(_data, State::width, pos, pos + 1);
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + 1);
 			break ;
 		case Down:
 			if (pos + w < (w * h))
-				_weight += Heuristics::SmartDistanceSwap(_data, State::width, pos, pos + w);
+				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + w);
 			break ;
 		case None:
 			throw std::logic_error("None is not defined");

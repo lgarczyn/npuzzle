@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/09 17:45:41 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/11 11:07:14 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,20 @@ Parser::ParseResult	parse_args(int ac, char **av)
 		if (is_cmd_opt(av, av + ac, "-h"))
 			exit(display_help(av[0]));
 		if (is_cmd_opt(av, av + ac, "-f1"))
+		{
 			Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
+			Heuristics::HeuristicFunctionSwaper = Heuristics::ManhattanDistanceSwap;
+		}
 		if (is_cmd_opt(av, av + ac, "-f2"))
+		{
 			Heuristics::HeuristicFunction = Heuristics::SmartDistance;
+			Heuristics::HeuristicFunctionSwaper = Heuristics::SmartDistanceSwap;
+		}
 		if (is_cmd_opt(av, av + ac, "-f3"))
+		{
 			Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
+			Heuristics::HeuristicFunctionSwaper = Heuristics::SuperSmartDistanceSwap;
+		}
 		result = get_result(ac, av);
 		if (is_cmd_opt(av, av + ac, "-i"))
 			Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));
