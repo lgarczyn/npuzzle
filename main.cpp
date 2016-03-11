@@ -17,11 +17,12 @@
 #include "Generator.hpp"
 #include "Solver.hpp"
 #include "tools.h"
+#include <iostream>
 
 int		display_help(const char* path = "npuzzle")
 {
 	std::cout << "Usage: " << path << " [-h] [-w WIDTH] [-i ITERATION] [-s] [-u] [-f1] [-f2] [-f3] [-c MIN_STEP] [-m FILE]" << std::endl;
-	std::cout << "if no map is give, npuzzle should use stdin." << std::endl;
+	std::cout << "if no map is given, npuzzle should use stdin." << std::endl;
 	return (0);
 }
 
@@ -87,52 +88,115 @@ Parser::ParseResult	parse_args(int ac, char **av)
 	}
 }
 
-int		main(int ac, char **av)
+Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 {
-	State*					initial;
-	Parser::ParseResult		result;
-
-	result = parse_args(ac, av);
-	initial = new State(result.data);
-	if (initial->is_solvable() == State::Valid)
-	{
-		std::cout << av[0] << ": Puzzle is solvable" << std::endl;
-	}
-	else if (initial->is_solvable() == State::Impossible)
-	{
-		std::cerr << av[0] << ": Puzzle is unsolvable" << std::endl;
-		exit(1);
-	}
-	else
-	{
-		std::cerr << av[0] << ": Puzzle is broken" << std::endl;
-		exit(1);
-	}
 	std::cout << "Start" << std::endl;
-	print_map(initial->get_data());
-	Solver		puzzle(initial);
-	Solver::Result	res(0,0);
+	print_map(initial->get_data(), State::solution);
+
+	Solver			puzzle(initial);
+	Solver::Result	solverResult(0, 0);
+
 	size_t 	it;
 	int 	niv;
 
 	it = 0;
 	do {
-		while (!(res = puzzle.step()).finished)
+		while (!(solverResult = puzzle.step()).finished)
 		{
 			if (it % 10000 == 0)
 			{
-				niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+				niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 				std::cout << "Iteration count: " << it << std::endl;
-				std::cout << "Solution [score: " << res.actual_state->get_weight() << "]: " << niv << "%" << std::endl;
-				print_map(res.actual_state->get_data());
+				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]: " << niv << "%" << std::endl;
+				print_map(solverResult.actual_state->get_data(), State::solution);
 			}
 			++it;
 		}
-		niv = ((res.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
+		niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 		std::cout << "-- Iteration count: " << it << std::endl;
 		std::cout << "-- Solution: " << niv << "%" << std::endl;
-		std::cout << "-- Move count: " << res.movements->size() << std::endl;
-		print_map(res.actual_state->get_data());
-	} while ((result.search_step && result.search_step < res.movements->size()));
-	return (0);
+		std::cout << "-- Move count: " << solverResult.movements->size() << std::endl;
+		print_map(solverResult.actual_state->get_data(), State::solution);
+	} while ((parseResult.search_step && solverResult.movements->size() > parseResult.search_step));
+
+	return (solverResult);
+}
+
+int		main(int ac, char **av)
+{
+	State*					initial;
+	Parser::ParseResult parseResult;
+
+	parseResult = parse_args(ac, av);
+	initial = new State(parseResult.data);
+	if (initial->is_solvable() == State::Valid)
+	{
+		std::cout << av[0] << ": Puzzle is solvable" << std::endl << std::flush;
+	}
+	else if (initial->is_solvable() == State::Impossible)
+	{
+		std::cerr << av[0] << ": Puzzle is unsolvable" << std::endl << std::flush;
+		exit(1);
+	}
+	else
+	{
+		std::cerr << av[0] << ": Puzzle is broken" << std::endl << std::flush;
+		exit(1);
+	}
+
+	Solver::Result solverResult = solve_loop(initial, parseResult);
+
+	bool displayHelp = true;
+	while (1)
+	{
+		if (displayHelp)
+			std::cout << "Press:" << std::endl
+				<< "\t[q] to quit" << std::endl
+				<< "\t[d] to display data" << std::endl
+				<< "\t[s] to display solution" << std::endl
+				<< "\t[a] to display animation" << std::endl
+				<< std::endl << std::flush;
+
+		displayHelp = true;
+		switch(std::getchar())
+		{
+			case 'q':
+				exit(0);
+			case 'd':
+				std::cout
+				<< "Total number of states selected: " << solverResult.sizeComplexity << std::endl
+				<< "Max number of states in memory: " << solverResult.timeComplexity << std::endl
+				<< "Solution move count: " << solverResult.movements->size() << std::endl
+				<< std::endl << std::flush;
+				break;
+			case 's':
+				for (auto &x:*solverResult.movements)
+				{
+					std::cout << x << std::endl;
+				}
+				std::cout << std::endl << std::flush;
+				break;
+			case 'a': {
+				State *current = new State(initial->get_data());
+
+				for (auto &x:*solverResult.movements) {
+					print_map(current->get_data(), State::solution);
+					std::cout << std::endl;
+					usleep(500000);
+
+					State *tmp = new State(current, x);
+					delete current;
+					current = tmp;
+				}
+				print_map(current->get_data(), State::solution);
+				std::cout << std::endl << std::flush;
+				delete current;
+
+				break;
+			}
+			default:
+				displayHelp = false;
+				break;
+		}
+	}
 }

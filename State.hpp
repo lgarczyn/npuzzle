@@ -16,6 +16,7 @@
 #include <list>
 #include <vector>
 #include <functional>
+#include <iostream>
 #include "Heuristics.hpp"
 #include "Generator.hpp"
 #include "GridPoint.hpp"
@@ -47,16 +48,16 @@ public:
 		State(const std::u16string &data);
 		State(State* parent, const Movement direction);
 
-		std::list<State::Movement>	*get_movements() const;
-		int 						get_distance() const;
-		score 						get_weight() const;
-		void 						set_weight(score s);
-		const std::u16string&		get_data() const;
-		void 						set_distance(int d);
-		GridState 					is_solvable() const;
-		bool 						is_final() const;
-		void						set_parent(State* p);
-		State*						get_parent(void) const;
+		std::vector<State::Movement>	*get_movements() const;
+		int 							get_distance() const;
+		score 							get_weight() const;
+		void 							set_weight(score s);
+		const std::u16string&			get_data() const;
+		void 							set_distance(int d);
+		GridState 						is_solvable() const;
+		bool 							is_final() const;
+		void							set_parent(State* p);
+		State*							get_parent(void) const;
 
 		bool						operator<(const State* b) const;
 		static void					init(int width, int height);
@@ -69,6 +70,8 @@ public:
 		State*			_parent;
 };
 
+std::ostream& operator<< (std::ostream& s, const State::Movement c);
+
 template<>
 struct std::hash<State*>
 {
@@ -78,7 +81,7 @@ struct std::hash<State*>
 		return (hash(x->get_data()));
 	}
 };
-#include <iostream>
+
 template<>
 struct std::equal_to<State*>
 {

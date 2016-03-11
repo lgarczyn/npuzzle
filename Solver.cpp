@@ -4,29 +4,29 @@
 
 #include "Solver.hpp"
 
-Solver::Solver(State* root) : opened(1e6), closed(1e6)
+Solver::Solver(State* root) : _opened(1e6), _closed(1e6)
 {
 	State::initial_score = root->get_weight();
-	opened.insert(root);
-	opened_set.insert(root);
-	candidates = std::vector<State*>(4);
+	_opened.insert(root);
+	_opened_set.insert(root);
+	_candidates = std::vector<State*>(4);
 }
 
 void	Solver::set_candidates(State* from)
 {
-	candidates[0] = new State(from, State::Up);
-	candidates[1] = new State(from, State::Right);
-	candidates[2] = new State(from, State::Down);
-	candidates[3] = new State(from, State::Left);
+	_candidates[0] = new State(from, State::Up);
+	_candidates[1] = new State(from, State::Right);
+	_candidates[2] = new State(from, State::Down);
+	_candidates[3] = new State(from, State::Left);
 }
 
 Solver::Result Solver::step()
 {
 	Result result = Result(0, 0);
 
-	if (!opened.empty())
+	if (!_opened.empty())
 	{
-		State* e = *opened_set.begin();
+		State* e = *_opened_set.begin();
 
 		result.actual_state = e;
 		if (e->is_final())
@@ -37,20 +37,20 @@ Solver::Result Solver::step()
 		}
 	//	else
 		{
-			opened.erase(e);
-			opened_set.erase(opened_set.begin());
-			closed.insert(e);
+			_opened.erase(e);
+			_opened_set.erase(_opened_set.begin());
+			_closed.insert(e);
 			set_candidates(e);
-			for (auto s:candidates)
+			for (auto s:_candidates)
 			{
-				auto openedEq = opened.find(s);
-				auto closedEq = closed.find(s);
-				bool isPreviousOpened = (openedEq != opened.end());
-				bool isPreviousClosed = (closedEq != closed.end());
+				auto openedEq = _opened.find(s);
+				auto closedEq = _closed.find(s);
+				bool isPreviousOpened = (openedEq != _opened.end());
+				bool isPreviousClosed = (closedEq != _closed.end());
 				if (!isPreviousClosed && !isPreviousOpened)
 				{
-					opened.insert(s);
-					opened_set.insert(s);
+					_opened.insert(s);
+					_opened_set.insert(s);
 				}
 				else
 				{
@@ -62,9 +62,9 @@ Solver::Result Solver::step()
 						previous->set_parent(s->get_parent());
 						if (!isPreviousOpened)
 						{
-							opened.insert(previous);
-							opened_set.insert(previous);
-							closed.erase(previous);
+							_opened.insert(previous);
+							_opened_set.insert(previous);
+							_closed.erase(previous);
 						}
 					}
 					delete s;
@@ -72,6 +72,8 @@ Solver::Result Solver::step()
 			}
 		}
 	}
+	result.timeComplexity = _timeComplexity;
+	result.sizeComplexity = _sizeComplexity;
 	return (result);
 }
 

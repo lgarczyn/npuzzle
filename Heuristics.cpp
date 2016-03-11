@@ -51,24 +51,40 @@ score Heuristics::SuperSmartDistance(const std::u16string& data, const std::u16s
     int score = 0;
     int maxdist = width + width - 2;
     int length = data.length();
-    for (int counter = 0; counter < length; counter++)
+    std::vector<int>&   finder = State::solution_finder;
+    uint16_t    val;
+
+    for (int i = 0; i < length; i++)
     {
-        int i = State::order[counter];
-        uint16_t val = data[i];
-        int indexSolution = solution.find(val);
-        int dist =  GridPoint::ManDistance(i, indexSolution, width);
-
-        if (dist != 0)
-        {
-            int zeroDist = GridPoint::ManDistance(data.find(static_cast<char16_t>(0)), indexSolution, width);
-
-            score += (maxdist - zeroDist) + (maxdist - dist);
-            return (score);
-        }
-        else
-        {
-            score += 2 * maxdist;
-        }
+        val = data[i];
+        int dist =  GridPoint::ManDistance(i, finder[val], width);
+        score += maxdist - dist;
     }
-    return (score);
+
+    int finishedIndex = 0;
+    for (int i = 0; i < length; i++)
+    {
+        int index = State::order[i];
+        if (data[index] != solution[index])
+            break;
+        finishedIndex++;
+    }
+    finishedIndex = State::order[finishedIndex];
+
+    val = solution[finishedIndex];
+    int targetIndex = data.find(val);
+    val = 0;
+    int zeroIndex = data.find(val);
+
+    int distZero = GridPoint::ManDistance(targetIndex, zeroIndex, width);
+    distZero -= 4;
+
+    int smartScore = maxdist - distZero;
+
+    if (distZero)
+    {
+        int distTarget = GridPoint::ManDistance(targetIndex, finishedIndex, width);
+        smartScore += maxdist - distTarget;
+    }
+    return (score + smartScore * 2);
 }

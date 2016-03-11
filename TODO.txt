@@ -10,3 +10,7 @@
 
 //BONUS PERSO
 * rectangle
+
+//BUG
+* ./npuzzle -s -w10 -f2 doesn't create
+* test HUGE numbers

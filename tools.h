@@ -15,8 +15,8 @@
 #include <string>
 #include <vector>
 
-void split(const std::string& str,
+void 	split(const std::string& str,
 		std::vector<std::string>& tokens,
 		const std::string& delimiters = " ");
-bool is_number(const std::string& s);
-void	print_map(const std::u16string& d);
+bool 	is_number(const std::string& s);
+void	print_map(const std::u16string& data, const std::u16string& solution);

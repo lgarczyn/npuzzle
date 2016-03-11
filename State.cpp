@@ -62,15 +62,17 @@ State::State(State* parent, const State::Movement direction) {
 	_weight = Heuristics::HeuristicFunction(_data, State::solution, State::width);
 }
 
-std::list<State::Movement>* State::get_movements() const {
-	std::list<State::Movement>* movements = new std::list<State::Movement>(_distance);
-	const State* node = this;
+std::vector<State::Movement>* State::get_movements() const {
+	std::vector<State::Movement>* movements = new std::vector<State::Movement>(_distance);
 
-	while (node) {
-		movements->push_back(node->_movement);
+	const State* node = this;
+	int counter = _distance;
+
+	while (--counter >= 0 && node)
+	{
+		(*movements)[counter] = node->_movement;
 		node = node->_parent;
 	}
-	movements->reverse();
 	return (movements);
 }
 
@@ -125,6 +127,19 @@ bool			State::operator<(const State* b) const
 {
 	std::cout << "operator < of state" << std::endl;
 	return  (_data == b->_data);
+}
+
+std::ostream& operator<< (std::ostream& s, const State::Movement c)
+{
+	if (c == State::Left)
+		return (s << std::string("Left"));
+	if (c == State::Right)
+		return (s << std::string("Right"));
+	if (c == State::Up)
+		return (s << std::string("Up"));
+	if (c == State::Down)
+		return (s << std::string("Down"));
+	return (s << std::string("None"));
 }
 
 void			State::set_parent(State* p)
