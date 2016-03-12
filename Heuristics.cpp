@@ -9,18 +9,20 @@ weighter Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
 
 score Heuristics::ManhattanDistance(const std::u16string& data, const std::u16string& solution, int width)
 {
-    int score = 0;
-    int maxdist = width + width - 2;
-    int length = data.length();
+    int                 score = 0;
+    int                 length = data.length();
     std::vector<int>&   finder = State::solution_finder;
-    uint16_t val;
+    uint16_t            val;
 
     (void)solution;
     for (int i = 0; i < length; i++)
     {
         val = data[i];
-        int dist =  GridPoint::ManDistance(i, finder[val], width);
-        score += maxdist - dist;
+        if (val)
+        {
+            int dist =  GridPoint::ManDistance(i, finder[val], width);
+            score += dist;
+        }
     }
     return (score);
 }

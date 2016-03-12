@@ -96,6 +96,6 @@ struct std::less<State*>
 {
 	bool operator()(const State* a, const State* b)
 	{
-		return (a->get_weight() > b->get_weight());
+		return ((a->get_weight() + a->get_distance()) < (b->get_weight() + b->get_distance()));
 	}
 };
