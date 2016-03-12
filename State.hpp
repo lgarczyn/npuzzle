@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 19:05:21 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/11 17:29:44 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ public:
 		State(State* parent, const Movement direction);
 
 		std::vector<State::Movement>	*get_movements() const;
+		Movement						get_movement() const;
 		int 							get_distance() const;
 		score 							get_weight() const;
 		void 							set_weight(score s);

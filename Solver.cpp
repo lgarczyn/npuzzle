@@ -14,10 +14,21 @@ Solver::Solver(State* root) : _opened(1e6), _closed(1e6)
 
 void	Solver::set_candidates(State* from)
 {
-	_candidates[0] = new State(from, State::Up);
-	_candidates[1] = new State(from, State::Right);
-	_candidates[2] = new State(from, State::Down);
-	_candidates[3] = new State(from, State::Left);
+	const std::u16string&	data = from->get_data();
+	int		w = State::width;
+	int		h = State::height;
+	int		pos = data.find(static_cast<char16_t>(0));
+	State::Movement	prev_move = from->get_movement();
+
+	std::fill(_candidates.begin(), _candidates.end(), nullptr);
+	if (pos - w >= 0 && prev_move != State::Down)
+		_candidates[0] = new State(from, State::Up);
+	if ((pos + 1) % w > 0 && prev_move != State::Left)
+		_candidates[1] = new State(from, State::Right);
+	if (pos + w < (w * h) && prev_move != State::Up)
+		_candidates[2] = new State(from, State::Down);
+	if (pos % w > 0 && prev_move != State::Right)
+		_candidates[3] = new State(from, State::Left);
 }
 
 Solver::Result Solver::step()
@@ -35,7 +46,7 @@ Solver::Result Solver::step()
 			result.movements = e->get_movements();
 			//return (result);
 		}
-	//	else
+		//	else
 		{
 			_opened.erase(e);
 			_opened_set.erase(_opened_set.begin());
@@ -43,31 +54,34 @@ Solver::Result Solver::step()
 			set_candidates(e);
 			for (auto s:_candidates)
 			{
-				auto openedEq = _opened.find(s);
-				auto closedEq = _closed.find(s);
-				bool isPreviousOpened = (openedEq != _opened.end());
-				bool isPreviousClosed = (closedEq != _closed.end());
-				if (!isPreviousClosed && !isPreviousOpened)
+				if (s)
 				{
-					_opened.insert(s);
-					_opened_set.insert(s);
-				}
-				else
-				{
-					State *previous = isPreviousOpened ? *openedEq : *closedEq;
-
-					if (s->get_distance() < previous->get_distance())
+					auto openedEq = _opened.find(s);
+					auto closedEq = _closed.find(s);
+					bool isPreviousOpened = (openedEq != _opened.end());
+					bool isPreviousClosed = (closedEq != _closed.end());
+					if (!isPreviousClosed && !isPreviousOpened)
 					{
-						previous->set_distance(s->get_distance());
-						previous->set_parent(s->get_parent());
-						if (!isPreviousOpened)
-						{
-							_opened.insert(previous);
-							_opened_set.insert(previous);
-							_closed.erase(previous);
-						}
+						_opened.insert(s);
+						_opened_set.insert(s);
 					}
-					delete s;
+					else
+					{
+						State *previous = isPreviousOpened ? *openedEq : *closedEq;
+
+						if (s->get_distance() < previous->get_distance())
+						{
+							previous->set_distance(s->get_distance());
+							previous->set_parent(s->get_parent());
+							if (!isPreviousOpened)
+							{
+								_opened.insert(previous);
+								_opened_set.insert(previous);
+								_closed.erase(previous);
+							}
+						}
+						delete s;
+					}
 				}
 			}
 		}
