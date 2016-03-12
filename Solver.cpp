@@ -3,6 +3,7 @@
 //
 
 #include "Solver.hpp"
+#include "tools.h"
 
 Solver::Solver(State* root) : _opened(1e6), _closed(1e6)
 {
@@ -44,9 +45,8 @@ Solver::Result Solver::step()
 		{
 			result.finished = true;
 			result.movements = e->get_movements();
-			//return (result);
 		}
-		//	else
+		else
 		{
 			_opened.erase(e);
 			_opened_set.erase(_opened_set.begin());
@@ -67,25 +67,33 @@ Solver::Result Solver::step()
 					}
 					else
 					{
-						State *previous = isPreviousOpened ? *openedEq : *closedEq;
-
-						if (s->get_distance() < previous->get_distance())
+						auto previous = isPreviousOpened ? *openedEq : *closedEq;
+						custom_less less;
+						if (less(s, previous))
 						{
-							previous->set_distance(s->get_distance());
-							previous->set_parent(s->get_parent());
 							if (!isPreviousOpened)
 							{
-								_opened.insert(previous);
-								_opened_set.insert(previous);
-								_closed.erase(previous);
+								_opened.erase(openedEq);
+								_opened_set.erase(previous);
 							}
+							else
+							{
+								_closed.erase(closedEq);
+							}
+							_opened.insert(s);
+							_opened_set.insert(s);
+							//delete previous;
 						}
-						delete s;
+						else
+						{
+							delete s;
+						}
 					}
 				}
 			}
 		}
 	}
+
 	result.timeComplexity = _timeComplexity;
 	result.sizeComplexity = _sizeComplexity;
 	return (result);

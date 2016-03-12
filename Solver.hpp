@@ -30,9 +30,9 @@ class Solver {
 		void	set_candidates(State* from);
 
 	private:
-		std::unordered_set<State*> _opened;
-		std::unordered_set<State*> _closed;
-		std::multiset<State*> _opened_set;
+		std::unordered_set<State*, custom_hash, custom_equal_to> _opened;
+		std::unordered_set<State*, custom_hash, custom_equal_to> _closed;
+		std::multiset<State*, custom_less> _opened_set;
 		std::vector<State*> _candidates;
 		int _timeComplexity;
 		int _sizeComplexity;

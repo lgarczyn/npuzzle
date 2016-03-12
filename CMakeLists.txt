@@ -1,8 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
 project(NPuzzle)
-
-set(CMAKE_CONFIGURATION_TYPES "Debug" CACHE STRING "" FORCE) # setting two custom
-# configuration types
 
 set(SRCS
 	main.cpp
@@ -16,6 +12,6 @@ set(SRCS
 	Heuristics.cpp
 	Solver.cpp)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -Werror")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ofast -std=c++11 -Wall -Wextra -Werror")
 add_executable(npuzzle ${SRCS})
 target_link_libraries(npuzzle termcap)

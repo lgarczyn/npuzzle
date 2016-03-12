@@ -65,17 +65,17 @@ Parser::ParseResult	parse_args(int ac, char **av)
 		if (is_cmd_opt(av, av + ac, "-f1"))
 		{
 			Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
-			Heuristics::HeuristicFunctionSwaper = Heuristics::ManhattanDistanceSwap;
+			Heuristics::HeuristicFunctionSwapper = Heuristics::ManhattanDistanceSwap;
 		}
 		if (is_cmd_opt(av, av + ac, "-f2"))
 		{
 			Heuristics::HeuristicFunction = Heuristics::SmartDistance;
-			Heuristics::HeuristicFunctionSwaper = Heuristics::SmartDistanceSwap;
+			Heuristics::HeuristicFunctionSwapper = Heuristics::SmartDistanceSwap;
 		}
 		if (is_cmd_opt(av, av + ac, "-f3"))
 		{
 			Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
-			Heuristics::HeuristicFunctionSwaper = Heuristics::SuperSmartDistanceSwap;
+			Heuristics::HeuristicFunctionSwapper = Heuristics::SuperSmartDistanceSwap;
 		}
 		result = get_result(ac, av);
 		if (is_cmd_opt(av, av + ac, "-i"))
@@ -118,9 +118,9 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 	do {
 		while (!(solverResult = puzzle.step()).finished)
 		{
-			if (it % 10000 == 0)
+			if (it % 100000 == 0)
 			{
-				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+				//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 				print_map(solverResult.actual_state->get_data(), State::solution);
 				std::cout << "Iteration count: " << it << std::endl;
@@ -128,7 +128,7 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 			}
 			++it;
 		}
-		std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+		//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 		niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 		print_map(solverResult.actual_state->get_data(), State::solution);
 		std::cout << "-- Iteration count: " << it << std::endl;
@@ -163,7 +163,6 @@ int		main(int ac, char **av)
 
 	Solver::Result solverResult = solve_loop(initial, parseResult);
 
-	return (0);
 	bool displayHelp = true;
 	while (1)
 	{
@@ -183,7 +182,7 @@ int		main(int ac, char **av)
 			case 'q':
 				exit(0);
 			case 'd':
-				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+				//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				std::cout
 				<< "Total number of states selected: " << solverResult.sizeComplexity << std::endl
 				<< "Max number of states in memory: " << solverResult.timeComplexity << std::endl
@@ -198,11 +197,11 @@ int		main(int ac, char **av)
 				std::cout << std::endl << std::flush;
 				break;
 			case 'a': {
-				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+				//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				State *current = new State(initial->get_data());
 
 				for (auto &x:*solverResult.movements) {
-					std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+					//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 					print_map(current->get_data(), State::solution);
 					std::cout << std::endl;
 					usleep(100000);

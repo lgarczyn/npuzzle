@@ -73,30 +73,20 @@ public:
 
 std::ostream& operator<< (std::ostream& s, const State::Movement c);
 
-template<>
-struct std::hash<State*>
+struct custom_hash
 {
-	size_t operator()(const State* x) const noexcept
-	{
-		std::hash<std::u16string>	hash;
-		return (hash(x->get_data()));
-	}
+public:
+	size_t operator()(const State* x) const noexcept;
 };
 
-template<>
-struct std::equal_to<State*>
+struct custom_equal_to
 {
-	size_t operator()(const State* a, const State* b) const noexcept
-	{
-		return (a->get_data() == b->get_data());
-	}
+public:
+	bool operator()(const State* a, const State* b) const noexcept;
 };
 
-template<>
-struct std::less<State*>
+struct custom_less
 {
-	bool operator()(const State* a, const State* b)
-	{
-		return ((a->get_weight() + a->get_distance()) < (b->get_weight() + b->get_distance()));
-	}
+public:
+	bool operator()(const State* a, const State* b);
 };

@@ -33,28 +33,23 @@ State::State(State* parent, const State::Movement direction) {
 	_parent = parent;
 	_distance = parent->_distance + 1;
 	_movement = direction;
-	_weight = parent->get_weight();
 
-	int		pos = _data.find(static_cast<char16_t>(0));
+	int		new_pos = _data.find(static_cast<char16_t>(0));//the position that will be filled with the number
+	int 	prev_pos;//the position that will be filled with the zero;
 	int		w = State::width;
+	
 	switch (_movement)
 	{
-		case Up:
-				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - w);
-			break ;
-		case Left:
-				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos - 1);
-			break ;
-		case Right:
-				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + 1);
-			break ;
-		case Down:
-				_weight += Heuristics::HeuristicFunctionSwaper(_data, State::width, pos, pos + w);
-			break ;
-		case None:
-			throw std::logic_error("None is not defined");
-			break ;
+		case Up: prev_pos = new_pos - w; break ;
+		case Left: prev_pos = new_pos - 1; break ;
+		case Right: prev_pos = new_pos + 1; break ;
+		case Down: prev_pos = new_pos + w; break ;
+		case None: throw std::logic_error("None is not defined"); break;
 	}
+	_weight =
+			parent->get_weight() +
+			Heuristics::HeuristicFunctionSwapper(_data, State::width, prev_pos, new_pos);
+	std::swap(_data[new_pos], _data[prev_pos]);
 }
 
 std::vector<State::Movement>* State::get_movements() const {
@@ -227,4 +222,19 @@ void			State::init(int width, int height)
 	State::solution = Generator::gen_solution(width, height);
 	State::solution_finder = gen_finder(State::solution);
 	State::solution_score = Heuristics::HeuristicFunction(State::solution, width);
+}
+
+size_t custom_hash::operator()(const State* x) const noexcept
+{
+	std::hash<std::u16string>	hash;
+	return (hash(x->get_data()));
+}
+bool custom_equal_to::operator()(const State* a, const State* b) const noexcept
+{
+	return (a->get_data() == b->get_data());
+}
+bool custom_less::operator()(const State* a, const State* b)
+{
+	//return ((a->get_weight()) > (b->get_weight()));
+	return ((a->get_weight() + a->get_distance()) < (b->get_weight() + b->get_distance()));
 }
