@@ -42,7 +42,15 @@ void super_erase(std::multiset<State*, custom_less>& set, State* s)
 
 	while (it != ite) {
 		if (cmp(*it, s)) {
+			size_t a =  set.size();
 			set.erase(it);
+			if (a != set.size() + 1)
+			{
+				std::cout << a << " - " << set.size() << std::endl;
+				std::cout << "ERR" << std::endl;
+				while (1)
+					continue;
+			}
 			return;
 		}
 		++it;
@@ -72,6 +80,11 @@ Solver::Result Solver::step()
 			set_candidates(e);
 			for (auto s:_candidates)
 			{
+				/*if (s) {
+					_opened.insert(s);
+					_opened_set.insert(s);
+				}*/
+
 				if (s) {
 					auto openedEq = _opened.find(s);
 					auto closedEq = _closed.find(s);
@@ -81,7 +94,7 @@ Solver::Result Solver::step()
 
 					if (isPreviousClosed && isPreviousOpened)
 					{
-						throw std::logic_error("Cannot both opened and closed");
+						 throw std::logic_error("Cannot both opened and closed");
 					}
 					else if (isPreviousClosed || isPreviousOpened)
 					{
@@ -99,6 +112,8 @@ Solver::Result Solver::step()
 								super_erase(_opened_set, previous);
 							}
 							delete previous;
+							_opened.insert(s);
+							_opened_set.insert(s);
 						}
 						else
 						{
@@ -111,6 +126,7 @@ Solver::Result Solver::step()
 						_opened_set.insert(s);
 					}
 				}
+
 			}
 		}
 	}

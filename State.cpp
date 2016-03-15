@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/11 17:30:12 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/15 17:22:15 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,11 @@ State::State(State* parent, const State::Movement direction) {
 		case Down: prev_pos = new_pos + w; break ;
 		case None: throw std::logic_error("None is not defined"); break;
 	}
-	_weight =
-			parent->get_weight() +
-			Heuristics::HeuristicFunctionSwapper(_data, State::width, prev_pos, new_pos);
+	//_weight =
+	//		parent->get_weight() +
+	//		Heuristics::HeuristicFunctionSwapper(_data, State::width, prev_pos, new_pos);
 	std::swap(_data[new_pos], _data[prev_pos]);
+	_weight = Heuristics::HeuristicFunction(_data, State::width);
 }
 
 std::vector<State::Movement>* State::get_movements() const {
