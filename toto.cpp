@@ -2,7 +2,6 @@
 // Created by Louis GARCZYNSKI on 3/4/16.
 //
 
-#include <set>
 #include "Solver.hpp"
 #include "tools.h"
 
@@ -33,23 +32,6 @@ void	Solver::set_candidates(State* from)
 		_candidates[3] = new State(from, State::Left);
 }
 
-void super_erase(std::multiset<State*, custom_less>& set, State* s)
-{
-	auto pit = set.equal_range(s);
-	auto it = pit.first;
-	auto ite = pit.second;
-	custom_equal_to	cmp;
-
-	while (it != ite) {
-		if (cmp(*it, s)) {
-			set.erase(it);
-			return;
-		}
-		++it;
-	}
-	throw std::logic_error("could not find state in multi set");
-}
-
 Solver::Result Solver::step()
 {
 	Result result = Result(0, 0);
@@ -72,43 +54,40 @@ Solver::Result Solver::step()
 			set_candidates(e);
 			for (auto s:_candidates)
 			{
-				if (s) {
+				if (s)
+				{
 					auto openedEq = _opened.find(s);
 					auto closedEq = _closed.find(s);
 					bool isPreviousOpened = (openedEq != _opened.end());
 					bool isPreviousClosed = (closedEq != _closed.end());
-					custom_less			less;
-
-					if (isPreviousClosed && isPreviousOpened)
+					if (!isPreviousClosed && !isPreviousOpened)
 					{
-						throw std::logic_error("Cannot both opened and closed");
+						_opened.insert(s);
+						_opened_set.insert(s);
 					}
-					else if (isPreviousClosed || isPreviousOpened)
+					else
 					{
 						auto previous = isPreviousOpened ? *openedEq : *closedEq;
-
+						custom_less less;
 						if (less(s, previous))
 						{
 							if (isPreviousClosed)
 							{
-								_closed.erase(closedEq);
+								_closed.erase(previous);
+								_opened.insert(s);
+								_opened_set.insert(s);
 							}
-							else if (isPreviousOpened)
+							else
 							{
+								// previous is open
 								_opened.erase(openedEq);
-								super_erase(_opened_set, previous);
+								_opened_set.erase(previous);
 							}
-							delete previous;
 						}
 						else
 						{
 							delete s;
 						}
-					}
-					else if (!isPreviousClosed && !isPreviousOpened)
-					{
-						_opened.insert(s);
-						_opened_set.insert(s);
 					}
 				}
 			}
@@ -123,10 +102,10 @@ Solver::Result Solver::step()
 Solver::~Solver() {}
 
 Solver::Result::Result(int timeComplexity, int sizeComplexity):
-		timeComplexity(timeComplexity),
-		sizeComplexity(sizeComplexity),
-		actual_state(nullptr),
-		movements(nullptr),
-		finished(false)
+	timeComplexity(timeComplexity),
+	sizeComplexity(sizeComplexity),
+	actual_state(nullptr),
+	movements(nullptr),
+	finished(false)
 {
 }
