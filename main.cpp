@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/16 14:44:17 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/16 15:20:20 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ int		main(int ac, char **av)
 
 	Solver::Result solverResult = solve_loop(initial, parseResult);
 
+	return (0);
 	bool displayHelp = true;
 	while (1)
 	{
