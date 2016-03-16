@@ -73,44 +73,78 @@ score Heuristics::SmartDistanceSwap(std::u16string& data, int width, int prev_po
 	return (score);
 }
 
-score	LinearConflictRow(const std::u16string& data, int width, uint16_t val, int x, int y)
+static score	LinearConflictColumn(const std::u16string& data, int width, int x, int y, int sy)
 {
+	score		score = 0;
 	std::vector<int>&   finder = State::solution_finder;
-	u16int_t	val2;
+	uint16_t	val2;
 	int 		x2;
+	int 		i2;
+
+	for (int y2 = y + 1; y2 < width; ++y2)
+	{
+		val2 = data[y2 * width + x];
+		i2 = finder[val2];
+		x2 = i2 % width;
+		if (x == x2)
+		{
+			if ((i2 / width) < sy)
+			{
+				score += 2;
+			}
+		}
+	}
+	return (score);
+}
+
+static score	LinearConflictRow(const std::u16string& data, int width, int x, int y, int sx)
+{
+	score		score = 0;
+	std::vector<int>&   finder = State::solution_finder;
+	uint16_t	val2;
 	int 		y2;
-	size_t 		i2;
+	int 		i2;
 
 	for (int x2 = x + 1; x2 < width; ++x2)
 	{
 		val2 = data[y * width + x2];
 		i2 = finder[val2];
-		y2 = i2 % width;
+		y2 = i2 / width;
 		if (y == y2)
 		{
-			x2 = i2 / width;
-			if (x2 < x)
+			if ((i2 % width) < sx)
+			{
+				score += 2;
+			}
 		}
 	}
+	return (score);
 }
 
 score Heuristics::LinearConflict(const std::u16string& data, int width)
 {
 	score score = 0;
-	int maxdist = width + width - 2;
-	int length = data.length();
 	uint16_t	val;
+	std::vector<int>&   finder = State::solution_finder;
+	int		sx;
+	int		sy;
+	int		i;
 
 	for (int y = 0; y < width; ++y)
 	{
 		for (int x = 0; x < width; ++x)
 		{
-			int i = y * width + x;
-			val = data[i];
-			score += LinearConflictRow(data, width, val, x, y);
+			val = data[y * width + x];
+			i = finder[val];
+			sx = (i % width);
+			sy = (i / width);
+			if (y == finder[val] / width)
+				score += LinearConflictRow(data, width, x, y, sx);
+			if (x == finder[val] % width)
+				score += LinearConflictColumn(data, width, x, y, sy);
 		}
 	}
-	return (score);
+	return (score + ManhattanDistance(data, width));
 }
 
 score Heuristics::SuperSmartDistanceSwap(std::u16string& data, int width, int prev_pos, int next_pos)

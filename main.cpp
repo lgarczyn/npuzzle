@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/15 18:11:03 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/16 14:44:17 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ Parser::ParseResult	parse_args(int ac, char **av)
 		}
 		if (is_cmd_opt(av, av + ac, "-f2"))
 		{
-			Heuristics::HeuristicFunction = Heuristics::SmartDistance;
+			Heuristics::HeuristicFunction = Heuristics::LinearConflict;
 			Heuristics::HeuristicFunctionSwapper = Heuristics::SmartDistanceSwap;
 		}
 		if (is_cmd_opt(av, av + ac, "-f3"))

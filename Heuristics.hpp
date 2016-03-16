@@ -16,7 +16,7 @@ class Heuristics
 {
 public:
     static score	ManhattanDistance(const std::u16string& data, int width);
-    static score	SmartDistance(const std::u16string& data, int width);
+	static score	LinearConflict(const std::u16string& data, int width);
     static score	SuperSmartDistance(const std::u16string& data, int width);
 
 	static score 	ManhattanDistanceSwap(std::u16string& data, int width, int pos_a, int pos_b);
