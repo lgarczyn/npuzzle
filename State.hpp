@@ -25,6 +25,7 @@ class State {
 public:
 	static int width;
 	static int height;
+	static int size;
 	static std::u16string solution;
 	static score solution_score;
 	static std::vector<int>	solution_finder;

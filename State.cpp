@@ -14,6 +14,7 @@
 
 int					State::width = 0;
 int					State::height = 0;
+int					State::size = 0;
 std::u16string		State::solution;
 score				State::solution_score = 0;
 std::vector<int>	State::solution_finder;
@@ -219,6 +220,7 @@ void			State::init(int width, int height)
 {
 	State::width = width;
 	State::height = height;
+	State::size = width * height;
 	State::order = get_order(width, height);
 	State::solution = Generator::gen_solution(width, height);
 	State::solution_finder = gen_finder(State::solution);
@@ -230,12 +232,14 @@ size_t custom_hash::operator()(const State* x) const noexcept
 	//std::hash<std::u16string>	hash;
 	//return (hash(x->get_data()));
 
-	auto& data = x->get_data();
+	const char16_t* 	data = x->get_data().data();
+	const char16_t*		end = data + State::size;
 	size_t		value = 0;
 
-	for (auto c:data)
+	while (data < end)
 	{
-		value = 37 * value + c;
+		value = 37 * value + *data;
+		++data;
 	}
 	return (value);
 }
