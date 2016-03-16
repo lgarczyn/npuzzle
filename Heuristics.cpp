@@ -73,23 +73,43 @@ score Heuristics::SmartDistanceSwap(std::u16string& data, int width, int prev_po
 	return (score);
 }
 
-score Heuristics::SmartDistance(const std::u16string& data, int width)
+score	LinearConflictRow(const std::u16string& data, int width, uint16_t val, int x, int y)
+{
+	std::vector<int>&   finder = State::solution_finder;
+	u16int_t	val2;
+	int 		x2;
+	int 		y2;
+	size_t 		i2;
+
+	for (int x2 = x + 1; x2 < width; ++x2)
+	{
+		val2 = data[y * width + x2];
+		i2 = finder[val2];
+		y2 = i2 % width;
+		if (y == y2)
+		{
+			x2 = i2 / width;
+			if (x2 < x)
+		}
+	}
+}
+
+score Heuristics::LinearConflict(const std::u16string& data, int width)
 {
 	score score = 0;
 	int maxdist = width + width - 2;
 	int length = data.length();
-	std::vector<int>&   finder = State::solution_finder;
 	uint16_t	val;
 
-	for (int i = 0; i < length; i++)
+	for (int y = 0; y < width; ++y)
 	{
-		val = data[i];
-		int dist =  GridPoint::ManDistance(i, finder[val], width);
-		score += maxdist - dist;
+		for (int x = 0; x < width; ++x)
+		{
+			int i = y * width + x;
+			val = data[i];
+			score += LinearConflictRow(data, width, val, x, y);
+		}
 	}
-	val = 0;
-	int tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), finder[val], width);
-	score += tmp;
 	return (score);
 }
 
