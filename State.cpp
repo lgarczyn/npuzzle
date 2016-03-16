@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/15 17:22:15 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/16 12:41:49 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,8 +227,17 @@ void			State::init(int width, int height)
 
 size_t custom_hash::operator()(const State* x) const noexcept
 {
-	std::hash<std::u16string>	hash;
-	return (hash(x->get_data()));
+	//std::hash<std::u16string>	hash;
+	//return (hash(x->get_data()));
+
+	auto& data = x->get_data();
+	size_t		value = 0;
+
+	for (auto c:data)
+	{
+		value = 37 * value + c;
+	}
+	return (value);
 }
 bool custom_equal_to::operator()(const State* a, const State* b) const noexcept
 {
