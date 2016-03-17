@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/16 15:20:20 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 12:45:45 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,6 @@ Parser::ParseResult	parse_args(int ac, char **av)
 
 Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 {
-	std::cout << "Start" << std::endl;
-	print_map(initial->get_data(), State::solution);
-
 	Solver			puzzle(initial);
 	Solver::Result	solverResult(0, 0);
 
@@ -118,9 +115,9 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 	do {
 		while (!(solverResult = puzzle.step()).finished)
 		{
-			if (it % 100000 == 0)
+			if (it % 10000 == 0)
 			{
-				//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+				std::cout << tgetstr((char*)"cl", NULL);
 				niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 				print_map(solverResult.actual_state->get_data(), State::solution);
 				std::cout << "Iteration count: " << it << std::endl;
@@ -128,7 +125,7 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 			}
 			++it;
 		}
-		//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+		std::cout << tgetstr((char*)"cl", NULL);
 		niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 		print_map(solverResult.actual_state->get_data(), State::solution);
 		std::cout << "-- Iteration count: " << it << std::endl;
@@ -163,7 +160,6 @@ int		main(int ac, char **av)
 
 	Solver::Result solverResult = solve_loop(initial, parseResult);
 
-	return (0);
 	bool displayHelp = true;
 	while (1)
 	{
@@ -183,7 +179,7 @@ int		main(int ac, char **av)
 			case 'q':
 				exit(0);
 			case 'd':
-				//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+				std::cout << tgetstr((char*)"cl", NULL);
 				std::cout
 				<< "Total number of states selected: " << solverResult.sizeComplexity << std::endl
 				<< "Max number of states in memory: " << solverResult.timeComplexity << std::endl
