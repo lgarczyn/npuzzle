@@ -21,6 +21,10 @@
 #include "Generator.hpp"
 #include "GridPoint.hpp"
 
+class State;
+
+using indexer = int (*)(State* state);
+
 class State {
 public:
 	static int width;
@@ -62,8 +66,12 @@ public:
 
 		bool						operator<(const State* b) const;
 		static void					init(int width, int height);
+		static indexer 				get_index;
+		static int					indexer_astar(State *);
+		static int					indexer_uniform(State *);
+		static int					indexer_greedy(State *);
 
-	private:
+private:
 		std::string	_data;
 		score			_weight;
 		int 			_distance;

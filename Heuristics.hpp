@@ -23,5 +23,5 @@ public:
 	static score	SuperSmartDistanceSwap(std::string& data, int width, int pos_a, int pos_b);
 
 	static weighter	HeuristicFunction;
-	static swapper HeuristicFunctionSwapper;
+	static swapper	HeuristicFunctionSwapper;
 };

@@ -6,12 +6,50 @@
 #include "Solver.hpp"
 #include "tools.h"
 
-Solver::Solver(State* root) : _opened(1e6), _closed(1e6)
+
+set*	Solver::get_opened_set(State *state)
 {
+	int index = State::get_index(state);
+
+	if (index >= MAX_SOLUTION_LENGTH)
+		throw std::logic_error("State index too big: check get_index function.");
+
+	if (_opened[index] == nullptr)
+		_opened[index] = new std::unordered_set<State*, custom_hash, custom_equal_to>(SOLVER_BUCKET_SIZE);
+	return _opened[index];
+}
+
+set*	Solver::get_closed_set(State *state)
+{
+	int index = State::get_index(state);
+
+	if (index >= MAX_SOLUTION_LENGTH)
+		throw std::logic_error("State index too big: check get_index function.");
+
+	if (_closed[index] == nullptr)
+		_closed[index] = new std::unordered_set<State*, custom_hash, custom_equal_to>(SOLVER_BUCKET_SIZE);
+
+	return _closed[index];
+}
+
+State*	Solver::get_smallest_state()
+{
+	for (int i = 0; i < MAX_SOLUTION_LENGTH; i++)
+	{
+		if (_opened[i] && !_opened[i]->empty())
+		{
+			return (*_opened[i]->begin());
+		}
+	}
+	throw new std::logic_error("No valid opened state but count is still superior to 0");
+}
+
+Solver::Solver(State* root) : _opened(), _closed()
+{
+
 	State::initial_score = root->get_weight();
-	_opened.insert(root);
-	_opened_set.insert(root);
-	_candidates = std::vector<State*>(4);
+	get_opened_set(root)->insert(root);
+	_openCount = 1;
 	_sizeComplexity = 0;
 	_timeComplexity = 0;
 }
@@ -20,45 +58,40 @@ void	Solver::set_candidates(State* from)
 {
 	const std::string&	data = from->get_data();
 	int		w = State::width;
-	int		h = State::height;
+	int		l = State::size;
 	int		pos = data.find(static_cast<char16_t>(0));
 	State::Movement	prev_move = from->get_movement();
 
-	std::fill(_candidates.begin(), _candidates.end(), nullptr);
 	if (pos - w >= 0 && prev_move != State::Down)
 		_candidates[0] = new State(from, State::Up);
+	else
+		_candidates[0] = nullptr;
+
 	if ((pos + 1) % w > 0 && prev_move != State::Left)
 		_candidates[1] = new State(from, State::Right);
-	if (pos + w < (w * h) && prev_move != State::Up)
+	else
+		_candidates[1] = nullptr;
+
+	if (pos + w < l && prev_move != State::Up)
 		_candidates[2] = new State(from, State::Down);
+	else
+		_candidates[2] = nullptr;
+
 	if (pos % w > 0 && prev_move != State::Right)
 		_candidates[3] = new State(from, State::Left);
-}
-
-void super_erase(std::multiset<State*, custom_less>& set, State* s)
-{
-	auto pit = set.equal_range(s);
-	auto it = pit.first;
-	auto ite = pit.second;
-	custom_equal_to	cmp;
-
-	while (it != ite) {
-		if (cmp(*it, s)) {
-			set.erase(it);
-			return;
-		}
-		++it;
-	}
-	throw std::logic_error("could not find state in multi set");
+	else
+		_candidates[3] = nullptr;
 }
 
 Solver::Result Solver::step()
 {
 	Result result = Result(0, 0);
 
-	if (!_opened.empty())
+	if (_openCount > 0) // CHECK IF STATE IS EMPTY
 	{
-		State* e = *_opened_set.begin();
+		//GET SMALLEST SET
+		//GET ANY STATE
+		State* e = get_smallest_state();
 
 		result.actual_state = e;
 		if (e->is_final())
@@ -68,51 +101,19 @@ Solver::Result Solver::step()
 		}
 		else
 		{
-			_opened.erase(e);
-			_opened_set.erase(_opened_set.begin());
-			_closed.insert(e);
+			get_opened_set(e)->erase(e);
+			//get_closed_set(e)->insert(e);
+			_openCount--;
+
 			set_candidates(e);
-			for (auto s:_candidates)
+			for (int i = 0; i < 4; i++)
 			{
+				auto s = _candidates[i];
 				if (s) {
-
-					auto openedEq = _opened.find(s);
-					auto closedEq = _closed.find(s);
-					bool isPreviousOpened = (openedEq != _opened.end());
-					bool isPreviousClosed = (closedEq != _closed.end());
-					custom_less			less;
-
-					if (isPreviousClosed || isPreviousOpened)
-					{
-						auto previous = isPreviousOpened ? *openedEq : *closedEq;
-
-						if (less(s, previous))
-						{
-							if (isPreviousClosed)
-							{
-								_closed.erase(closedEq);
-							}
-							else if (isPreviousOpened)
-							{
-								_opened.erase(openedEq);
-								super_erase(_opened_set, previous);
-							}
-							delete previous;
-							_opened.insert(s);
-							_opened_set.insert(s);
-						}
-						else
-							delete s;
-					}
-					else if (!isPreviousClosed && !isPreviousOpened)
-					{
-						_opened.insert(s);
-						_opened_set.insert(s);
-						_timeComplexity++;
-					}
-					int openedSize = _opened.size();
-					if (openedSize > _sizeComplexity)
-						_sizeComplexity = openedSize;
+					get_opened_set(s)->insert(s);
+					_openCount++;
+					if (_openCount > _sizeComplexity)
+						_sizeComplexity = _openCount;
 				}
 			}
 		}

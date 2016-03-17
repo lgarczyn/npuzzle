@@ -113,7 +113,7 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 	do {
 		while (!(solverResult = puzzle.step()).finished)
 		{
-			if (it % 10000 == 0)
+			if (it % 100000 == 0)
 			{
 				//std::cout << tgetstr((char*)"cl", NULL);
 				print_map(solverResult.actual_state->get_data(), State::solution);

@@ -103,7 +103,8 @@ State::GridState State::is_solvable() const {
 }
 
 bool State::is_final() const {
-	return (_data == solution);
+	return _weight == 0;
+	//return (_data == solution);
 }
 
 const std::string&	State::get_data(void) const
@@ -241,8 +242,20 @@ bool custom_equal_to::operator()(const State* a, const State* b) const noexcept
 	return (a->get_data() == b->get_data());
 }
 
-bool custom_less::operator()(const State* a, const State* b)
+indexer State::get_index = indexer_astar;
+
+
+int State::indexer_astar(State* state)
 {
-	//return ((a->get_weight()) > (b->get_weight()));
-	return ((a->get_weight() + a->get_distance()) < (b->get_weight() + b->get_distance()));
+	return state->get_weight() + state->get_distance();
+}
+
+int State::indexer_greedy(State* state)
+{
+	return state->get_weight();
+}
+
+int State::indexer_uniform(State* state)
+{
+	return state->get_distance();
 }
