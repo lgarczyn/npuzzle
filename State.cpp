@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 16:55:53 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 17:08:54 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int					State::width = 0;
 int					State::height = 0;
+int					State::size = 0;
 std::u16string		State::solution;
 score				State::solution_score = 0;
 std::vector<int>	State::solution_finder;
@@ -219,6 +220,7 @@ void			State::init(int width, int height)
 {
 	State::width = width;
 	State::height = height;
+	State::size = width * height;
 	State::order = get_order(width, height);
 	State::solution = Generator::gen_solution(width, height);
 	State::solution_finder = gen_finder(State::solution);
@@ -227,8 +229,19 @@ void			State::init(int width, int height)
 
 size_t custom_hash::operator()(const State* x) const noexcept
 {
-	std::hash<std::u16string>	hash;
-	return (hash(x->get_data()));
+	//std::hash<std::u16string>	hash;
+	//return (hash(x->get_data()));
+
+	const char16_t* 	data = x->get_data().data();
+	const char16_t*		end = data + State::size;
+	size_t		value = 0;
+
+	while (data < end)
+	{
+		value = 37 * value + *data;
+		++data;
+	}
+	return (value);
 }
 
 bool custom_equal_to::operator()(const State* a, const State* b) const noexcept

@@ -15,5 +15,3 @@
 * ./npuzzle -s -w10 -f2 doesn't create
 * test HUGE numbers as input
 * fix percentages
-* why doesn't it work above 3x3?
-* come la place dans le multiset dépend de _distance, il faut replacer le state dans le multiset si on trouve un chemin plus court.
