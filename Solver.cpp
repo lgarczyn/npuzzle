@@ -19,19 +19,6 @@ set*	Solver::get_opened_set(State *state)
 	return _opened[index];
 }
 
-set*	Solver::get_closed_set(State *state)
-{
-	int index = State::get_index(state);
-
-	if (index >= MAX_SOLUTION_LENGTH)
-		throw std::logic_error("State index too big: check get_index function.");
-
-	if (_closed[index] == nullptr)
-		_closed[index] = new std::unordered_set<State*, custom_hash, custom_equal_to>(SOLVER_BUCKET_SIZE);
-
-	return _closed[index];
-}
-
 State*	Solver::get_smallest_state()
 {
 	for (int i = 0; i < MAX_SOLUTION_LENGTH; i++)
@@ -44,7 +31,7 @@ State*	Solver::get_smallest_state()
 	throw new std::logic_error("No valid opened state but count is still superior to 0");
 }
 
-Solver::Solver(State* root) : _opened(), _closed()
+Solver::Solver(State* root) : _opened()
 {
 
 	State::initial_score = root->get_weight();
@@ -52,6 +39,7 @@ Solver::Solver(State* root) : _opened(), _closed()
 	_openCount = 1;
 	_sizeComplexity = 0;
 	_timeComplexity = 0;
+	_stepCount = 0;
 }
 
 void	Solver::set_candidates(State* from)
@@ -87,10 +75,9 @@ Solver::Result Solver::step()
 {
 	Result result = Result(0, 0);
 
-	if (_openCount > 0) // CHECK IF STATE IS EMPTY
+	_stepCount++;
+	if (_openCount > 0)
 	{
-		//GET SMALLEST SET
-		//GET ANY STATE
 		State* e = get_smallest_state();
 
 		result.actual_state = e;
@@ -102,7 +89,6 @@ Solver::Result Solver::step()
 		else
 		{
 			get_opened_set(e)->erase(e);
-			//get_closed_set(e)->insert(e);
 			_openCount--;
 
 			set_candidates(e);
@@ -119,6 +105,9 @@ Solver::Result Solver::step()
 			}
 		}
 	}
+	if (_stepCount % CLEANUP_INTERVAL == 0)
+		cleanup_duplicates();
+
 	result.sizeComplexity = _sizeComplexity;
 	result.timeComplexity = _timeComplexity;
 	return (result);
@@ -133,4 +122,34 @@ Solver::Result::Result(int timeComplexity, int sizeComplexity):
 		movements(nullptr),
 		finished(false)
 {
+}
+
+void Solver::cleanup_duplicates()
+{
+	set library;
+
+	int counter = 0;
+
+	for (auto set:_opened)
+	{
+		if (set)
+		{
+			auto it = set->begin();
+			while (it != set->end())
+			{
+				if (library.find(*it) != library.end())
+				{
+					it = set->erase(it);
+				}
+				else
+				{
+					library.insert(*it);
+					it++;
+				}
+			}
+
+			if (++counter > CLEANUP_DEPTH)
+				return;;
+		}
+	}
 }
