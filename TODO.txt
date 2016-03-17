@@ -1,17 +1,15 @@
 //BONUS DONE
-* max steps
 * current state display
-
-//TODO
-* last heuristics
 
 //BONUS OFFICIAL
 * g() et h() ?
 
-//BONUS PERSO
+//BONUS PERSOd
 * rectangle
 
 //BUG
-* ./npuzzle -s -w10 -f2 doesn't create
-* test HUGE numbers as input
+* test HUGE numbers as input (go to string)
 * fix percentages
+
+//TODO
+max open, max state
