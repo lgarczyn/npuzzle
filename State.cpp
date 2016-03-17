@@ -15,12 +15,12 @@
 int					State::width = 0;
 int					State::height = 0;
 int					State::size = 0;
-std::u16string		State::solution;
+std::string		State::solution;
 std::vector<int>	State::solution_finder;
 score				State::initial_score = 0;
 std::vector<int>	State::order;
 
-State::State(const std::u16string &data) {
+State::State(const std::string &data) {
 	_data = data;
 	_weight = Heuristics::HeuristicFunction(_data, State::width);
 	_distance = 0;
@@ -70,7 +70,7 @@ int State::get_distance() const
 }
 
 State::GridState State::is_solvable() const {
-	std::u16string grid = _data;
+	std::string grid = _data;
 
 	GridPoint posZero = GridPoint::GetPointFromIndex((int) grid.find(static_cast<char16_t >(0)), width);
 	GridPoint destZero = GridPoint::GetPointFromIndex((int) solution.find(static_cast<char16_t >(0)), width);
@@ -106,7 +106,7 @@ bool State::is_final() const {
 	return (_data == solution);
 }
 
-const std::u16string&	State::get_data(void) const
+const std::string&	State::get_data(void) const
 {
 	return (this->_data);
 }
@@ -167,7 +167,7 @@ std::vector<int> get_order(int w, int h)
 	char16_t		c = 1;
 	int				pos = 0;
 	State::Movement	dir = State::Right;
-	std::u16string	data(max, static_cast<char16_t>('\0'));
+	std::string	data(max, static_cast<char16_t>('\0'));
 
 	while (c <= max)
 	{
@@ -203,7 +203,7 @@ std::vector<int> get_order(int w, int h)
 	return (order);
 }
 
-std::vector<int> gen_finder(std::u16string& sol)
+std::vector<int> gen_finder(std::string& sol)
 {
 	int     length = sol.length();
 	std::vector<int> v(length);

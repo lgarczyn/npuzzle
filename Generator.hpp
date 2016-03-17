@@ -19,7 +19,7 @@
 class Generator
 {
 protected:
-	static void				random_iteration(std::u16string& data, int w, int h);
+	static void				random_iteration(std::string& data, int w, int h);
 public:
 	static int	iteration;
 
@@ -32,9 +32,9 @@ public:
 		random
 	};
 
-	static std::u16string	gen_solution(int w, int h);
-	static std::u16string	gen_solvable(Parser::ParseResult& p);
-	static std::u16string	gen_unsolvable(Parser::ParseResult& p);
-	static std::u16string	gen_random(Parser::ParseResult& p);
-//	static std::u16string	gen(GenerationKind kind);
+	static std::string	gen_solution(int w, int h);
+	static std::string	gen_solvable(Parser::ParseResult& p);
+	static std::string	gen_unsolvable(Parser::ParseResult& p);
+	static std::string	gen_random(Parser::ParseResult& p);
+//	static std::string	gen(GenerationKind kind);
 };

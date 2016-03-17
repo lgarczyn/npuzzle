@@ -26,7 +26,7 @@ public:
 	static int width;
 	static int height;
 	static int size;
-	static std::u16string solution;
+	static std::string solution;
 	static std::vector<int>	solution_finder;
 	static score initial_score;
 	static std::vector<int> order;
@@ -45,7 +45,7 @@ public:
 			Valid,
 		};
 
-		State(const std::u16string &data);
+		State(const std::string &data);
 		State(State* parent, const Movement direction);
 
 		std::vector<State::Movement>	*get_movements() const;
@@ -53,7 +53,7 @@ public:
 		int 							get_distance() const;
 		score 							get_weight() const;
 		void 							set_weight(score s);
-		const std::u16string&			get_data() const;
+		const std::string&			get_data() const;
 		void 							set_distance(int d);
 		GridState 						is_solvable() const;
 		bool 							is_final() const;
@@ -64,7 +64,7 @@ public:
 		static void					init(int width, int height);
 
 	private:
-		std::u16string	_data;
+		std::string	_data;
 		score			_weight;
 		int 			_distance;
 		Movement 		_movement;

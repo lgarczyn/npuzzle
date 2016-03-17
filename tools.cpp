@@ -47,7 +47,7 @@ int		get_int_len(int len)
 	return counter;
 }
 
-void	print_map(const std::u16string& data, const std::u16string& solution)
+void	print_map(const std::string& data, const std::string& solution)
 {
 	int		width = State::width;
 	int		height = State::height;

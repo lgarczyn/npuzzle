@@ -18,7 +18,7 @@ Solver::Solver(State* root) : _opened(1e6), _closed(1e6)
 
 void	Solver::set_candidates(State* from)
 {
-	const std::u16string&	data = from->get_data();
+	const std::string&	data = from->get_data();
 	int		w = State::width;
 	int		h = State::height;
 	int		pos = data.find(static_cast<char16_t>(0));

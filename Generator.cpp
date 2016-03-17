@@ -14,11 +14,11 @@
 
 int	Generator::iteration = 42;
 
-std::u16string	Generator::gen_solution(int w, int h)
+std::string	Generator::gen_solution(int w, int h)
 {
 
 	char16_t		max = w * h;
-	std::u16string	data(max, static_cast<char16_t>('\0'));
+	std::string	data(max, static_cast<char16_t>('\0'));
 
 	for (int i = 0; i < max; i++)
 	{
@@ -26,7 +26,7 @@ std::u16string	Generator::gen_solution(int w, int h)
 	}
 	return (data);
 }
-void			Generator::random_iteration(std::u16string& data, int w, int h)
+void			Generator::random_iteration(std::string& data, int w, int h)
 {
 	int		pos;
 
@@ -55,18 +55,18 @@ void			Generator::random_iteration(std::u16string& data, int w, int h)
 	}
 }
 
-std::u16string	Generator::gen_solvable(Parser::ParseResult& p)
+std::string	Generator::gen_solvable(Parser::ParseResult& p)
 {
-	std::u16string data;
+	std::string data;
 
 	data = State::solution;
 	random_iteration(data, p.width, p.height);
 	return (data);
 }
 
-std::u16string	Generator::gen_unsolvable(Parser::ParseResult& p)
+std::string	Generator::gen_unsolvable(Parser::ParseResult& p)
 {
-	std::u16string data;
+	std::string data;
 
 	data = State::solution;
 	std::swap(data.at(0), data.at(1));
@@ -74,7 +74,7 @@ std::u16string	Generator::gen_unsolvable(Parser::ParseResult& p)
 	return (data);
 }
 
-std::u16string	Generator::gen_random(Parser::ParseResult& p)
+std::string	Generator::gen_random(Parser::ParseResult& p)
 {
 	if (std::rand() & 1)
 		return (gen_solvable(p));
@@ -82,7 +82,7 @@ std::u16string	Generator::gen_random(Parser::ParseResult& p)
 		return (gen_unsolvable(p));
 }
 /*
-std::u16string Generator::gen(Generator::GenerationKind kind) {
+std::string Generator::gen(Generator::GenerationKind kind) {
 	switch (kind)
 	{
 		case solved: return (gen_solution());

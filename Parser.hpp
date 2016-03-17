@@ -22,7 +22,7 @@ class	Parser
 		class ParseResult
 		{
 		public:
-			std::u16string data;
+			std::string data;
 			int		width;
 			int		height;
 			bool	shouldGenerate;

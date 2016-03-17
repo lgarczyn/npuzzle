@@ -9,7 +9,7 @@
 weighter	Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
 swapper		Heuristics::HeuristicFunctionSwapper = Heuristics::ManhattanDistanceSwap;
 
-score Heuristics::ManhattanDistance(const std::u16string& data, int width)
+score Heuristics::ManhattanDistance(const std::string& data, int width)
 {
 	int				 score = 0;
 	int				 length = data.length();
@@ -28,7 +28,7 @@ score Heuristics::ManhattanDistance(const std::u16string& data, int width)
 	return (score);
 }
 
-score Heuristics::ManhattanDistanceSwap(std::u16string& data, int width, int prev_pos, int next_pos)
+score Heuristics::ManhattanDistanceSwap(std::string& data, int width, int prev_pos, int next_pos)
 {
 	int target_pos = State::solution_finder[data[prev_pos]];
 
@@ -38,7 +38,7 @@ score Heuristics::ManhattanDistanceSwap(std::u16string& data, int width, int pre
 	return (next_score - prev_score);
 }
 
-score Heuristics::SmartDistanceSwap(std::u16string& data, int width, int prev_pos, int next_pos)
+score Heuristics::SmartDistanceSwap(std::string& data, int width, int prev_pos, int next_pos)
 {
 	std::vector<int>&   finder = State::solution_finder;
 	score		score = 0;
@@ -73,7 +73,7 @@ score Heuristics::SmartDistanceSwap(std::u16string& data, int width, int prev_po
 	return (score);
 }
 
-static score	LinearConflictColumn(const std::u16string& data, int width, int x, int y, int sy)
+static score	LinearConflictColumn(const std::string& data, int width, int x, int y, int sy)
 {
 	score		score = 0;
 	std::vector<int>&   finder = State::solution_finder;
@@ -97,7 +97,7 @@ static score	LinearConflictColumn(const std::u16string& data, int width, int x, 
 	return (score);
 }
 
-static score	LinearConflictRow(const std::u16string& data, int width, int x, int y, int sx)
+static score	LinearConflictRow(const std::string& data, int width, int x, int y, int sx)
 {
 	score		score = 0;
 	std::vector<int>&   finder = State::solution_finder;
@@ -121,7 +121,7 @@ static score	LinearConflictRow(const std::u16string& data, int width, int x, int
 	return (score);
 }
 
-score Heuristics::LinearConflict(const std::u16string& data, int width)
+score Heuristics::LinearConflict(const std::string& data, int width)
 {
 	score score = 0;
 	uint16_t	val;
@@ -147,7 +147,7 @@ score Heuristics::LinearConflict(const std::u16string& data, int width)
 	return (score + ManhattanDistance(data, width));
 }
 
-score Heuristics::SuperSmartDistanceSwap(std::u16string& data, int width, int prev_pos, int next_pos)
+score Heuristics::SuperSmartDistanceSwap(std::string& data, int width, int prev_pos, int next_pos)
 {
 	std::vector<int>&   finder = State::solution_finder;
 	score		score = 0;
@@ -182,12 +182,12 @@ score Heuristics::SuperSmartDistanceSwap(std::u16string& data, int width, int pr
 	return (score);
 }
 
-score Heuristics::SuperSmartDistance(const std::u16string& data, int width)
+score Heuristics::SuperSmartDistance(const std::string& data, int width)
 {
 	score		score = 0;
 	uint16_t	val;
 	int			length = data.length();
-	const std::u16string&	solution = State::solution;
+	const std::string&	solution = State::solution;
 
 	(void)width;
 	for (int i = 0; i < length; i++)
