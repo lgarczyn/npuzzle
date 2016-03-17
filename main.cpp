@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 17:52:50 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 18:53:18 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 				//std::cout << tgetstr((char*)"cl", NULL);
 				print_map(solverResult.actual_state->get_data(), State::solution);
 				std::cout << "Iteration count: " << it << std::endl;
-				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]: " << std::endl;
+				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]" << std::endl;
 			}
 			++it;
 		}
