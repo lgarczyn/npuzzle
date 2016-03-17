@@ -12,6 +12,8 @@ Solver::Solver(State* root) : _opened(1e6), _closed(1e6)
 	_opened.insert(root);
 	_opened_set.insert(root);
 	_candidates = std::vector<State*>(4);
+	_sizeComplexity = 0;
+	_timeComplexity = 0;
 }
 
 void	Solver::set_candidates(State* from)
@@ -73,6 +75,7 @@ Solver::Result Solver::step()
 			for (auto s:_candidates)
 			{
 				if (s) {
+
 					auto openedEq = _opened.find(s);
 					auto closedEq = _closed.find(s);
 					bool isPreviousOpened = (openedEq != _opened.end());
@@ -105,14 +108,17 @@ Solver::Result Solver::step()
 					{
 						_opened.insert(s);
 						_opened_set.insert(s);
+						_timeComplexity++;
 					}
+					int openedSize = _opened.size();
+					if (openedSize > _sizeComplexity)
+						_sizeComplexity = openedSize;
 				}
 			}
 		}
 	}
-
-	result.timeComplexity = _timeComplexity;
 	result.sizeComplexity = _sizeComplexity;
+	result.timeComplexity = _timeComplexity;
 	return (result);
 }
 
