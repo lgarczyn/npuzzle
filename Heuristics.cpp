@@ -7,7 +7,6 @@
 #include <algorithm>
 
 weighter	Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
-swapper		Heuristics::HeuristicFunctionSwapper = Heuristics::ManhattanDistanceSwap;
 
 score Heuristics::ManhattanDistance(const std::string& data, int width)
 {
@@ -24,51 +23,6 @@ score Heuristics::ManhattanDistance(const std::string& data, int width)
 			int dist =  GridPoint::ManDistance(i, finder[val], width);
 			score += dist;
 		}
-	}
-	return (score);
-}
-
-score Heuristics::ManhattanDistanceSwap(std::string& data, int width, int prev_pos, int next_pos)
-{
-	int target_pos = State::solution_finder[data[prev_pos]];
-
-	int prev_score = GridPoint::ManDistance(target_pos, prev_pos, width);
-	int next_score = GridPoint::ManDistance(target_pos, next_pos, width);
-
-	return (next_score - prev_score);
-}
-
-score Heuristics::SmartDistanceSwap(std::string& data, int width, int prev_pos, int next_pos)
-{
-	std::vector<int>&   finder = State::solution_finder;
-	score		score = 0;
-	int			maxdist = width + width - 2;
-	uint16_t	val;
-	int			dist;
-	int			tmp;
-
-	{ // Substract old score
-		val = data[prev_pos];
-		dist = GridPoint::ManDistance(prev_pos, finder[val], width);
-		score -= maxdist - dist;
-		val = data[next_pos];
-		dist = GridPoint::ManDistance(next_pos, finder[val], width);
-		score -= maxdist - dist;
-		val = 0;
-		tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), finder[val], width);
-		score -= tmp;
-	}
-	std::swap(data.at(prev_pos), data.at(next_pos));
-	{ // Add new score
-		val = data[prev_pos];
-		dist = GridPoint::ManDistance(prev_pos, finder[val], width);
-		score += maxdist - dist;
-		val = data[next_pos];
-		dist = GridPoint::ManDistance(next_pos, finder[val], width);
-		score += maxdist - dist;
-		val = 0;
-		tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), finder[val], width);
-		score += tmp;
 	}
 	return (score);
 }
@@ -145,41 +99,6 @@ score Heuristics::LinearConflict(const std::string& data, int width)
 		}
 	}
 	return (score + ManhattanDistance(data, width));
-}
-
-score Heuristics::SuperSmartDistanceSwap(std::string& data, int width, int prev_pos, int next_pos)
-{
-	std::vector<int>&   finder = State::solution_finder;
-	score		score = 0;
-	int			maxdist = width + width - 2;
-	uint16_t	val;
-	int			dist;
-	int			tmp;
-
-	{ // Substract old score
-		val = data[prev_pos];
-		dist = GridPoint::ManDistance(prev_pos, finder[val], width);
-		score -= maxdist - dist;
-		val = data[next_pos];
-		dist = GridPoint::ManDistance(next_pos, finder[val], width);
-		score -= maxdist - dist;
-		val = 0;
-		tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), finder[val], width);
-		score -= tmp;
-	}
-	std::swap(data.at(prev_pos), data.at(next_pos));
-	{ // Add new score
-		val = data[prev_pos];
-		dist = GridPoint::ManDistance(prev_pos, finder[val], width);
-		score += maxdist - dist;
-		val = data[next_pos];
-		dist = GridPoint::ManDistance(next_pos, finder[val], width);
-		score += maxdist - dist;
-		val = 0;
-		tmp = GridPoint::ManDistance(static_cast<int>(data.find(val)), finder[val], width);
-		score += tmp;
-	}
-	return (score);
 }
 
 score Heuristics::SuperSmartDistance(const std::string& data, int width)
