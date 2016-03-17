@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 17:43:59 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 19:10:24 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 #include "Generator.hpp"
 #include "GridPoint.hpp"
 
+class State;
+
+using indexer = score (*)(const State*);
+
 class State {
 public:
 	static int width;
@@ -30,6 +34,10 @@ public:
 	static std::vector<int>	solution_finder;
 	static score initial_score;
 	static std::vector<int> order;
+	static indexer	get_index;
+	static score	get_index_basic(const State* a);
+	static score	get_index_uniform(const State* a);
+	static score	get_index_greedy(const State* a);
 
 		enum Movement {
 			None,

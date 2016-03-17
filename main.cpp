@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 18:55:27 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 19:17:32 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@
 
 int		display_help(const char* path = "npuzzle")
 {
-	std::cout << "Usage: " << path << " [-h] [-w WIDTH] [-i ITERATION] [-s] [-u] [-f1] [-f2] [-f3] [-c MIN_STEP] [-m FILE]" << std::endl;
+	std::cout << "Usage: " << path << " [-h] " << std::endl
+		<< "[-w WIDTH] [-i ITERATION] [-u] [-s]" << std::endl
+	   	<< "[-f1] [-f2] [-f3] [-m FILE]" << std::endl
+	   	<< "[--greedy] [--uniform]" << std::endl;
 	std::cout << "if no map is given, npuzzle should use stdin." << std::endl;
 	return (0);
 }
@@ -68,6 +71,10 @@ Parser::ParseResult	parse_args(int ac, char **av)
 			Heuristics::HeuristicFunction = Heuristics::LinearConflict;
 		if (is_cmd_opt(av, av + ac, "-f3"))
 			Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
+		if (is_cmd_opt(av, av + ac, "--uniform"))
+			State::get_index = State::get_index_uniform;
+		if (is_cmd_opt(av, av + ac, "--greedy"))
+			State::get_index = State::get_index_greedy;
 		result = get_result(ac, av);
 		if (is_cmd_opt(av, av + ac, "-i"))
 			Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));

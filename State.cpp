@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 17:47:27 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 19:09:33 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,12 @@
 int					State::width = 0;
 int					State::height = 0;
 int					State::size = 0;
-std::string		State::solution;
+std::string			State::solution;
 std::vector<int>	State::solution_finder;
 score				State::initial_score = 0;
 std::vector<int>	State::order;
+indexer				State::get_index = State::get_index_basic;
+
 
 State::State(const std::string &data) {
 	_data = data;
@@ -241,8 +243,22 @@ bool custom_equal_to::operator()(const State* a, const State* b) const noexcept
 	return (a->get_data() == b->get_data());
 }
 
+score	State::get_index_basic(const State* a)
+{
+	return (a->get_weight() + a->get_distance());
+}
+
+score	State::get_index_uniform(const State* a)
+{
+	return (a->get_distance());
+}
+
+score	State::get_index_greedy(const State* a)
+{
+	return (a->get_weight());
+}
+
 bool custom_less::operator()(const State* a, const State* b)
 {
-	//return ((a->get_weight()) > (b->get_weight()));
-	return ((a->get_weight() + a->get_distance()) < (b->get_weight() + b->get_distance()));
+	return (State::get_index(a) < State::get_index(b));
 }
