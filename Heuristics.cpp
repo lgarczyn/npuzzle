@@ -184,44 +184,16 @@ score Heuristics::SuperSmartDistanceSwap(std::u16string& data, int width, int pr
 
 score Heuristics::SuperSmartDistance(const std::u16string& data, int width)
 {
-	int score = 0;
-	int maxdist = width + width - 2;
-	int length = data.length();
-	std::vector<int>&   finder = State::solution_finder;
-	const std::u16string&	solution = State::solution;
+	score		score = 0;
 	uint16_t	val;
+	int			length = data.length();
+	const std::u16string&	solution = State::solution;
 
 	for (int i = 0; i < length; i++)
 	{
 		val = data[i];
-		int dist =  GridPoint::ManDistance(i, finder[val], width);
-		score += maxdist - dist;
+		if (data[i] != solution[i])
+			score += 1;
 	}
-
-	int finishedIndex = 0;
-	for (int i = 0; i < length; i++)
-	{
-		int index = State::order[i];
-		if (data[index] != solution[index])
-			break;
-		finishedIndex++;
-	}
-	finishedIndex = State::order[finishedIndex];
-
-	val = solution[finishedIndex];
-	int targetIndex = data.find(val);
-	val = 0;
-	int zeroIndex = data.find(val);
-
-	int distZero = GridPoint::ManDistance(targetIndex, zeroIndex, width);
-	distZero -= 4;
-
-	int smartScore = maxdist - distZero;
-
-	if (distZero)
-	{
-		int distTarget = GridPoint::ManDistance(targetIndex, finishedIndex, width);
-		smartScore += maxdist - distTarget;
-	}
-	return (score + smartScore * 2);
+	return (score);
 }
