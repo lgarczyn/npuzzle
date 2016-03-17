@@ -9,7 +9,6 @@
 
 //BUG
 * test HUGE numbers as input (go to string)
-* fix percentages
 
 //TODO
 max open, max state

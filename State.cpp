@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 17:21:17 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 17:47:27 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ int					State::width = 0;
 int					State::height = 0;
 int					State::size = 0;
 std::u16string		State::solution;
-score				State::solution_score = 0;
 std::vector<int>	State::solution_finder;
 score				State::initial_score = 0;
 std::vector<int>	State::order;
@@ -47,9 +46,6 @@ State::State(State* parent, const State::Movement direction) {
 		case Down: prev_pos = new_pos + w; break ;
 		case None: throw std::logic_error("None is not defined"); break;
 	}
-	//_weight =
-	//		parent->get_weight() +
-	//		Heuristics::HeuristicFunctionSwapper(_data, State::width, prev_pos, new_pos);
 	std::swap(_data[new_pos], _data[prev_pos]);
 	_weight = Heuristics::HeuristicFunction(_data, State::width);
 }
@@ -224,7 +220,6 @@ void			State::init(int width, int height)
 	State::order = get_order(width, height);
 	State::solution = Generator::gen_solution(width, height);
 	State::solution_finder = gen_finder(State::solution);
-	State::solution_score = Heuristics::HeuristicFunction(State::solution, width);
 }
 
 size_t custom_hash::operator()(const State* x) const noexcept

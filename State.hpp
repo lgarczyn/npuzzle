@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/11 17:29:44 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 17:43:59 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ public:
 	static int height;
 	static int size;
 	static std::u16string solution;
-	static score solution_score;
 	static std::vector<int>	solution_finder;
 	static score initial_score;
 	static std::vector<int> order;

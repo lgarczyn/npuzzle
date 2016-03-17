@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 17:14:12 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 17:52:50 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,7 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 {
 	Solver			puzzle(initial);
 	Solver::Result	solverResult(0, 0);
-
-	size_t 	it;
-	int 	niv;
+	size_t 			it;
 
 	it = 0;
 	do {
@@ -118,19 +116,16 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 			if (it % 10000 == 0)
 			{
 				std::cout << tgetstr((char*)"cl", NULL);
-				niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 				print_map(solverResult.actual_state->get_data(), State::solution);
 				std::cout << "Iteration count: " << it << std::endl;
-				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]: " << niv << "%" << std::endl;
+				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]: " << std::endl;
 			}
 			++it;
 		}
 		std::cout << tgetstr((char*)"cl", NULL);
-		niv = ((solverResult.actual_state->get_weight() - State::initial_score) * 100.0f) / (State::solution_score - State::initial_score);
 		print_map(solverResult.actual_state->get_data(), State::solution);
-		std::cout << "-- Iteration count: " << it << std::endl;
-		std::cout << "-- Solution: " << niv << "%" << std::endl;
-		std::cout << "-- Move count: " << solverResult.movements->size() << std::endl;
+		std::cout << "Iteration count: " << it << std::endl;
+		std::cout << "Move count: " << solverResult.movements->size() << std::endl;
 	} while ((parseResult.search_step && solverResult.movements->size() > parseResult.search_step));
 
 	return (solverResult);
@@ -187,26 +182,25 @@ int		main(int ac, char **av)
 				<< std::endl << std::flush;
 				break;
 			case 's':
+				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				for (auto &x:*solverResult.movements)
-				{
 					std::cout << x << std::endl;
-				}
 				std::cout << std::endl << std::flush;
 				break;
 			case 'a': {
-				//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				State *current = new State(initial->get_data());
 
 				for (auto &x:*solverResult.movements) {
-					//std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+					std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 					print_map(current->get_data(), State::solution);
 					std::cout << std::endl;
-					usleep(100000);
+					usleep(500000);
 
 					State *tmp = new State(current, x);
 					delete current;
 					current = tmp;
 				}
+				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				print_map(current->get_data(), State::solution);
 				std::cout << std::endl << std::flush;
 				delete current;
