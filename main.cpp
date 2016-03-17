@@ -176,7 +176,7 @@ int		main(int ac, char **av)
 			case 'd':
 //				std::cout << tgetstr((char*)"cl", NULL);
 				std::cout
-				<< "Total number of states selected: " << solverResult.sizeComplexity << std::endl
+				<< "Max number of states in open set: " << solverResult.sizeComplexity << std::endl
 				<< "Max number of states in memory: " << solverResult.timeComplexity << std::endl
 				<< "Solution move count: " << solverResult.movements->size() << std::endl
 				<< std::endl << std::flush;
@@ -203,6 +203,7 @@ int		main(int ac, char **av)
 //				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				print_map(current->get_data(), State::solution);
 				std::cout << std::endl << std::flush;
+				usleep(500000);
 				delete current;
 
 				break;

@@ -112,6 +112,7 @@ Solver::Result Solver::step()
 				if (s) {
 					get_opened_set(s)->insert(s);
 					_openCount++;
+					_timeComplexity++;
 					if (_openCount > _sizeComplexity)
 						_sizeComplexity = _openCount;
 				}
