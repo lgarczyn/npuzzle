@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 19:09:33 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 12:06:18 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ std::string			State::solution;
 std::vector<int>	State::solution_finder;
 score				State::initial_score = 0;
 std::vector<int>	State::order;
-indexer				State::get_index = State::get_index_basic;
+indexer				State::get_index = indexer_astar;
 
 
 State::State(const std::string &data) {
@@ -105,7 +105,8 @@ State::GridState State::is_solvable() const {
 }
 
 bool State::is_final() const {
-	return (_data == solution);
+	return _weight == 0;
+	//return (_data == solution);
 }
 
 const std::string&	State::get_data(void) const
@@ -243,22 +244,17 @@ bool custom_equal_to::operator()(const State* a, const State* b) const noexcept
 	return (a->get_data() == b->get_data());
 }
 
-score	State::get_index_basic(const State* a)
+score State::indexer_astar(const State* state)
 {
-	return (a->get_weight() + a->get_distance());
+	return state->get_weight() + state->get_distance();
 }
 
-score	State::get_index_uniform(const State* a)
+score State::indexer_greedy(const State* state)
 {
-	return (a->get_distance());
+	return state->get_weight();
 }
 
-score	State::get_index_greedy(const State* a)
+score State::indexer_uniform(const State* state)
 {
-	return (a->get_weight());
-}
-
-bool custom_less::operator()(const State* a, const State* b)
-{
-	return (State::get_index(a) < State::get_index(b));
+	return state->get_distance();
 }

@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 19:17:32 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 12:04:30 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,9 @@ Parser::ParseResult	parse_args(int ac, char **av)
 		if (is_cmd_opt(av, av + ac, "-f3"))
 			Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
 		if (is_cmd_opt(av, av + ac, "--uniform"))
-			State::get_index = State::get_index_uniform;
+			State::get_index = State::indexer_uniform;
 		if (is_cmd_opt(av, av + ac, "--greedy"))
-			State::get_index = State::get_index_greedy;
+			State::get_index = State::indexer_greedy;
 		result = get_result(ac, av);
 		if (is_cmd_opt(av, av + ac, "-i"))
 			Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));
@@ -111,7 +111,7 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 	do {
 		while (!(solverResult = puzzle.step()).finished)
 		{
-			if (it % 10000 == 0)
+			if (it % 100000 == 0)
 			{
 				//std::cout << tgetstr((char*)"cl", NULL);
 				print_map(solverResult.actual_state->get_data(), State::solution);
@@ -174,7 +174,7 @@ int		main(int ac, char **av)
 			case 'd':
 //				std::cout << tgetstr((char*)"cl", NULL);
 				std::cout
-				<< "Total number of states selected: " << solverResult.sizeComplexity << std::endl
+				<< "Max number of states in open set: " << solverResult.sizeComplexity << std::endl
 				<< "Max number of states in memory: " << solverResult.timeComplexity << std::endl
 				<< "Solution move count: " << solverResult.movements->size() << std::endl
 				<< std::endl << std::flush;
@@ -201,6 +201,7 @@ int		main(int ac, char **av)
 //				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				print_map(current->get_data(), State::solution);
 				std::cout << std::endl << std::flush;
+				usleep(500000);
 				delete current;
 
 				break;

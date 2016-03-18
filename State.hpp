@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 19:10:24 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 12:06:31 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,15 @@ class State;
 using indexer = score (*)(const State*);
 
 class State {
-public:
-	static int width;
-	static int height;
-	static int size;
-	static std::string solution;
-	static std::vector<int>	solution_finder;
-	static score initial_score;
-	static std::vector<int> order;
-	static indexer	get_index;
-	static score	get_index_basic(const State* a);
-	static score	get_index_uniform(const State* a);
-	static score	get_index_greedy(const State* a);
+	public:
+		static int width;
+		static int height;
+		static int size;
+		static std::string solution;
+		static std::vector<int>	solution_finder;
+		static score initial_score;
+		static std::vector<int> order;
+		static indexer	get_index;
 
 		enum Movement {
 			None,
@@ -70,6 +67,9 @@ public:
 
 		bool						operator<(const State* b) const;
 		static void					init(int width, int height);
+		static score					indexer_astar(const State *);
+		static score					indexer_uniform(const State *);
+		static score					indexer_greedy(const State *);
 
 	private:
 		std::string	_data;
@@ -83,18 +83,18 @@ std::ostream& operator<< (std::ostream& s, const State::Movement c);
 
 struct custom_hash
 {
-public:
-	size_t operator()(const State* x) const noexcept;
+	public:
+		size_t operator()(const State* x) const noexcept;
 };
 
 struct custom_equal_to
 {
-public:
-	bool operator()(const State* a, const State* b) const noexcept;
+	public:
+		bool operator()(const State* a, const State* b) const noexcept;
 };
 
 struct custom_less
 {
-public:
-	bool operator()(const State* a, const State* b);
+	public:
+		bool operator()(const State* a, const State* b);
 };

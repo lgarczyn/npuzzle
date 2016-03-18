@@ -9,6 +9,8 @@
 
 //BUG
 * test HUGE numbers as input (go to string)
+- size
+- iterations
 
 //TODO
 max open, max state
