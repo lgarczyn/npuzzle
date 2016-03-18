@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/18 18:23:00 by lgarczyn         ###   ########.fr       */
+/*   Updated: 2016/03/18 19:03:56 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ class State {
 		void							set_parent(State* p);
 		State*							get_parent(void) const;
 
-		bool						operator<(const State* b) const;
 		static void					init(int width, int height);
 		static score					indexer_astar(const State *);
 		static score					indexer_uniform(const State *);
