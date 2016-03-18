@@ -33,9 +33,11 @@ class Solver {
 		Solver(State* root);
 		Result step();
 		set* get_opened_set(State* state);
-		set* get_closed_set(State* state);
+		set* get_closed_set(const State* state);
+		void store_in_universe(State* state);
+		State	*get_in_universe(State *state);
+		State	**get_universe_position(State *state);
 		State* get_smallest_state();
-		void cleanup_duplicates();
 		~Solver();
 		
 		void	set_candidates(State* from);
@@ -46,6 +48,7 @@ class Solver {
 		int _timeComplexity;
 		int _sizeComplexity;
 		int _openCount;
-		int _stepCount;
+
+		void* _universe;
 };
 
