@@ -1,5 +1,0 @@
-//BONUS DONE
-* current state display
-* g() et h() ?
-* animation
-* rectangle

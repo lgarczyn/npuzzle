@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 17:16:46 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 19:42:45 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 19:01:56 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ std::string	Generator::gen_solution(int w, int h)
 {
 
 	char16_t		max = w * h;
-	std::string	data(max, static_cast<char16_t>('\0'));
+	std::string	data(max, '\0');
 
 	for (int i = 0; i < max; i++)
 	{
@@ -32,7 +32,7 @@ void			Generator::random_iteration(std::string& data, int w, int h)
 
 	for (auto i = iteration; i > 0; --i)
 	{
-		pos = data.find(static_cast<char16_t>(0));
+		pos = data.find('\0');
 		switch (std::rand() & 3)
 		{
 			case 0:

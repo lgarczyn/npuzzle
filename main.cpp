@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/18 17:12:02 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 19:05:36 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,14 +115,14 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 		{
 			if (it % 100000 == 0)
 			{
-				//std::cout << tgetstr((char*)"cl", NULL);
+				std::cout << tgetstr((char*)"cl", NULL);
 				print_map(solverResult.actual_state->get_data(), State::solution);
 				std::cout << "Iteration count: " << it << std::endl;
 				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]" << std::endl;
 			}
 			++it;
 		}
-		//std::cout << tgetstr((char*)"cl", NULL);
+		std::cout << tgetstr((char*)"cl", NULL);
 		print_map(solverResult.actual_state->get_data(), State::solution);
 		std::cout << "Iteration count: " << it << std::endl;
 		std::cout << "Move count: " << solverResult.movements->size() << std::endl;
@@ -155,6 +155,7 @@ int		main(int ac, char **av)
 
 	Solver::Result solverResult = solve_loop(initial, parseResult);
 
+	return (0);
 	bool displayHelp = true;
 	while (1)
 	{
@@ -174,7 +175,7 @@ int		main(int ac, char **av)
 			case 'q':
 				exit(0);
 			case 'd':
-//				std::cout << tgetstr((char*)"cl", NULL);
+				std::cout << tgetstr((char*)"cl", NULL);
 				std::cout
 				<< "Max number of states in open set: " << solverResult.sizeComplexity << std::endl
 				<< "Max number of states in memory: " << solverResult.timeComplexity << std::endl
@@ -182,7 +183,7 @@ int		main(int ac, char **av)
 				<< std::endl << std::flush;
 				break;
 			case 's':
-//				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				for (auto &x:*solverResult.movements)
 					std::cout << x << std::endl;
 				std::cout << std::endl << std::flush;
@@ -191,7 +192,7 @@ int		main(int ac, char **av)
 				State *current = new State(initial->get_data());
 
 				for (auto &x:*solverResult.movements) {
-//					std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+					std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 					print_map(current->get_data(), State::solution);
 					std::cout << std::endl;
 					usleep(500000);
@@ -200,7 +201,7 @@ int		main(int ac, char **av)
 					delete current;
 					current = tmp;
 				}
-//				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
+				std::cout << tgetstr((char*)"cl", NULL) << std::endl;
 				print_map(current->get_data(), State::solution);
 				std::cout << std::endl << std::flush;
 				usleep(500000);

@@ -34,8 +34,6 @@ class Solver {
 		Result step();
 		set* get_opened_set(State* state);
 		set* get_closed_set(const State* state);
-		void store_in_universe(State* state);
-		State	*get_in_universe(State *state);
 		State	**get_universe_position(State *state);
 		State* get_smallest_state();
 		~Solver();

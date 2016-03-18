@@ -31,38 +31,6 @@ State*	Solver::get_smallest_state()
 	throw new std::logic_error("No valid opened state but count is still superior to 0");
 }
 
-void	Solver::store_in_universe(State *state)
-{
-	void** 				node = &_universe;
-	const std::string& 	data = state->get_data();
-
-	for (int i = 0; i < State::size; i++)
-	{
-		if (*node == nullptr)
-		{
-			*node = new void*[State::size]();
-		}
-		node = &(node[(int)data[i]]);
-	}
-	*node = static_cast<void*>(state);
-}
-
-State	*Solver::get_in_universe(State *state)
-{
-	void** 				node = &_universe;
-	const std::string&  data = state->get_data();
-
-	for (int i = 0; i < State::size; i++)
-	{
-		if (*node == nullptr)
-		{
-			return nullptr;
-		}
-		node = &(node[(int)data[i]]);
-	}
-	return (static_cast<State*>(*node));
-}
-
 State**	Solver::get_universe_position(State *state)
 {
 	void** 				node = &_universe;

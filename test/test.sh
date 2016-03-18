@@ -4,7 +4,7 @@ i=3;
 nbTest=10;
 args='-s';
 genPath='../puzzle/npuzzle-gen.py';
-exePath='../npuzzle';
+exePath='../npuzzle -m';
 echo "=== 1x1 Test ==="
 $exePath "./1-S-0.txt" >& /dev/null;
 if [ $? = "0" ]; then echo ok ; else echo Bad ; fi

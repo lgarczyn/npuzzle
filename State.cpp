@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/18 18:22:20 by lgarczyn         ###   ########.fr       */
+/*   Updated: 2016/03/18 19:04:49 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,18 +106,11 @@ State::GridState State::is_solvable() const {
 
 bool State::is_final() const {
 	return _weight == 0;
-	//return (_data == solution);
 }
 
 const std::string&	State::get_data(void) const
 {
 	return (this->_data);
-}
-
-bool			State::operator<(const State* b) const
-{
-	std::cout << "operator < of state" << std::endl;
-	return  (_data == b->_data);
 }
 
 std::ostream& operator<< (std::ostream& s, const State::Movement c)
@@ -215,6 +208,7 @@ std::vector<int> gen_finder(std::string& sol)
 		v[sol.at(i)] = i;
 	return (v);
 }
+
 void			State::init(int width, int height)
 {
 	State::width = width;
@@ -229,16 +223,6 @@ size_t custom_hash::operator()(const State* x) const noexcept
 {
 	std::hash<std::string>	hash;
 	return (hash(x->get_data()));
-	const auto* 	data = x->get_data().data();
-	const auto*		end = data + State::size;
-	size_t		value = 0;
-
-	while (data < end)
-	{
-		value = (value << 4) ^ *data;
-		++data;
-	}
-	return (value);
 }
 
 bool custom_equal_to::operator()(const State* a, const State* b) const noexcept
