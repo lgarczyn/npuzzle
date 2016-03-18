@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:18:52 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/18 12:06:18 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 16:31:39 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ indexer				State::get_index = indexer_astar;
 
 State::State(const std::string &data) {
 	_data = data;
-	_weight = Heuristics::HeuristicFunction(_data, State::width);
+	_weight = Heuristics::HeuristicFunction(_data, State::width, State::height);
 	_distance = 0;
 	_movement = None;
 	_parent = nullptr;
@@ -36,7 +36,7 @@ State::State(State* parent, const State::Movement direction) {
 	_distance = parent->_distance + 1;
 	_movement = direction;
 
-	int		new_pos = _data.find(static_cast<char16_t>(0));//the position that will be filled with the number
+	int		new_pos = _data.find('\0');//the position that will be filled with the number
 	int 	prev_pos;//the position that will be filled with the zero;
 	int		w = State::width;
 	
@@ -49,7 +49,7 @@ State::State(State* parent, const State::Movement direction) {
 		case None: throw std::logic_error("None is not defined"); break;
 	}
 	std::swap(_data[new_pos], _data[prev_pos]);
-	_weight = Heuristics::HeuristicFunction(_data, State::width);
+	_weight = Heuristics::HeuristicFunction(_data, State::width, State::height);
 }
 
 std::vector<State::Movement>* State::get_movements() const {
@@ -74,8 +74,8 @@ int State::get_distance() const
 State::GridState State::is_solvable() const {
 	std::string grid = _data;
 
-	GridPoint posZero = GridPoint::GetPointFromIndex((int) grid.find(static_cast<char16_t >(0)), width);
-	GridPoint destZero = GridPoint::GetPointFromIndex((int) solution.find(static_cast<char16_t >(0)), width);
+	GridPoint posZero = GridPoint::GetPointFromIndex((int) grid.find('\0'), width);
+	GridPoint destZero = GridPoint::GetPointFromIndex((int) solution.find('\0'), width);
 
 	int distance = posZero.ManDistance(destZero);
 
@@ -148,17 +148,17 @@ void 			State::set_distance(int d)
 	this->_distance = d;
 }
 
-score 						State::get_weight(void) const
+score 			State::get_weight(void) const
 {
 	return (this->_weight);
 }
 
-void 						State::set_weight(score s)
+void 			State::set_weight(score s)
 {
 	this->_weight = s;
 }
 
-State::Movement						State::get_movement() const {
+State::Movement		State::get_movement() const {
 	return (this->_movement);
 }
 

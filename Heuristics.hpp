@@ -8,14 +8,14 @@
 #include "GridPoint.hpp"
 
 using score = long int;
-using weighter = score (*)(const std::string& data, int width);
+using weighter = score (*)(const std::string& data, int width, int height);
 
 class Heuristics
 {
 public:
-    static score	ManhattanDistance(const std::string& data, int width);
-	static score	LinearConflict(const std::string& data, int width);
-    static score	SuperSmartDistance(const std::string& data, int width);
+    static score	ManhattanDistance(const std::string& data, int width, int height);
+	static score	LinearConflict(const std::string& data, int width, int height);
+    static score	SuperSmartDistance(const std::string& data, int width, int height);
 
 	static weighter	HeuristicFunction;
 };

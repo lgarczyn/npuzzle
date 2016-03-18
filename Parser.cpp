@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 15:03:37 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/07 18:53:24 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 17:42:10 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <regex>
 
 Parser::ParseResult::ParseResult():data(), width(0), shouldGenerate(false), search_step(0){};
+bool	Parser::allow_rectangle = false;
 
 Parser::ParseResult	Parser::parse_file(const char* file_src)
 {
@@ -40,6 +41,7 @@ Parser::ParseResult		Parser::parse_istream(std::istream& file)
 	std::string					line;
 	std::vector<std::string>	tab;
 	int							w;
+	int							h = 0;
 
 	while (std::getline(file, line))
 	{
@@ -57,8 +59,8 @@ Parser::ParseResult		Parser::parse_istream(std::istream& file)
 					throw std::logic_error("Size is not a number: " + tab[0]);
 				w = std::stoi(tab[0]);
 				res.width = w;
-				if (w <= 0 || w >= 256)
-					throw std::logic_error("Bad size: 0 < size < 256");
+				if (w <= 0 || w >= 17)
+					throw std::logic_error("Bad size: 0 < size < 17");
 			}
 			else
 			{
@@ -70,10 +72,12 @@ Parser::ParseResult		Parser::parse_istream(std::istream& file)
 						throw std::logic_error("Is not a number: " + tab[0]);
 					res.data.push_back(std::stoi(s));
 				}
+				++h;
 			}
 		}
 	}
-	if (res.data.length() != static_cast<unsigned long>(w * w))
+	res.height = h;
+	if (h < 2 || (!allow_rectangle && res.data.length() != static_cast<unsigned long>(w * w)))
 		throw std::logic_error("Bad line number");
 	return (res);
 }

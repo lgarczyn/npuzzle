@@ -8,13 +8,14 @@
 
 weighter	Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
 
-score Heuristics::ManhattanDistance(const std::string& data, int width)
+score Heuristics::ManhattanDistance(const std::string& data, int width, int height)
 {
-	int				 score = 0;
-	int				 length = data.length();
-	std::vector<int>&   finder = State::solution_finder;
+	int					score = 0;
+	int					length = State::size;
+	std::vector<int>&	finder = State::solution_finder;
 	uint16_t			val;
 
+	(void)height;
 	for (int i = 0; i < length; i++)
 	{
 		val = data[i];
@@ -27,7 +28,7 @@ score Heuristics::ManhattanDistance(const std::string& data, int width)
 	return (score);
 }
 
-static score	LinearConflictColumn(const std::string& data, int width, int x, int y, int sy)
+static score	LinearConflictColumn(const std::string& data, int width, int height, int x, int y, int sy)
 {
 	score		score = 0;
 	std::vector<int>&   finder = State::solution_finder;
@@ -35,7 +36,7 @@ static score	LinearConflictColumn(const std::string& data, int width, int x, int
 	int 		x2;
 	int 		i2;
 
-	for (int y2 = y + 1; y2 < width; ++y2)
+	for (int y2 = y + 1; y2 < height; ++y2)
 	{
 		val2 = data[y2 * width + x];
 		i2 = finder[val2];
@@ -75,7 +76,7 @@ static score	LinearConflictRow(const std::string& data, int width, int x, int y,
 	return (score);
 }
 
-score Heuristics::LinearConflict(const std::string& data, int width)
+score Heuristics::LinearConflict(const std::string& data, int width, int height)
 {
 	score score = 0;
 	uint16_t	val;
@@ -84,7 +85,7 @@ score Heuristics::LinearConflict(const std::string& data, int width)
 	int		sy;
 	int		i;
 
-	for (int y = 0; y < width; ++y)
+	for (int y = 0; y < height; ++y)
 	{
 		for (int x = 0; x < width; ++x)
 		{
@@ -95,17 +96,17 @@ score Heuristics::LinearConflict(const std::string& data, int width)
 			if (y == finder[val] / width)
 				score += LinearConflictRow(data, width, x, y, sx);
 			if (x == finder[val] % width)
-				score += LinearConflictColumn(data, width, x, y, sy);
+				score += LinearConflictColumn(data, width, height, x, y, sy);
 		}
 	}
-	return (score + ManhattanDistance(data, width));
+	return (score + ManhattanDistance(data, width, height));
 }
 
-score Heuristics::SuperSmartDistance(const std::string& data, int width)
+score Heuristics::SuperSmartDistance(const std::string& data, int width, int height)
 {
-	score		score = 0;
-	uint16_t	val;
-	int			length = data.length();
+	score				score = 0;
+	uint16_t			val;
+	int					length = State::size;
 	const std::string&	solution = State::solution;
 
 	(void)width;

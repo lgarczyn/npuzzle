@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/18 12:04:30 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/18 17:12:02 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int		display_help(const char* path = "npuzzle")
 {
 	std::cout << "Usage: " << path << " [-h] " << std::endl
 		<< "[-w WIDTH] [-i ITERATION] [-u] [-s]" << std::endl
+		<< "[--rect]" << std::endl
 	   	<< "[-f1] [-f2] [-f3] [-m FILE]" << std::endl
 	   	<< "[--greedy] [--uniform]" << std::endl;
 	std::cout << "if no map is given, npuzzle should use stdin." << std::endl;
@@ -36,7 +37,6 @@ Parser::ParseResult	get_result(int ac, char **av)
 	Parser				p;
 
 	if (is_cmd_opt(av, av + ac, "-m")) {
-		std::cout << "READ M" << std::endl;
 		result = p.parse_file(get_cmd_opt(av, av + ac, "-m"));
 	}
 	else if (is_cmd_opt(av, av + ac, "-w")) {
@@ -45,7 +45,7 @@ Parser::ParseResult	get_result(int ac, char **av)
 			std::cerr << av[0] << ": width too small" << std::endl;
 			exit(1);
 		}
-		result.height = result.width; // TODO Make rectangular map
+		result.height = result.width;
 		result.shouldGenerate = true;
 	}
 	else
@@ -75,13 +75,15 @@ Parser::ParseResult	parse_args(int ac, char **av)
 			State::get_index = State::indexer_uniform;
 		if (is_cmd_opt(av, av + ac, "--greedy"))
 			State::get_index = State::indexer_greedy;
+		if (is_cmd_opt(av, av + ac, "--rect"))
+			Parser::allow_rectangle = true;
 		result = get_result(ac, av);
 		if (is_cmd_opt(av, av + ac, "-i"))
 			Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));
 
 		if (is_cmd_opt(av, av + ac, "-c"))
 			sscanf(get_cmd_opt(av, av + ac, "-c"), "%zu", &result.search_step);
-		State::init(result.width, result.width);
+		State::init(result.width, result.height);
 
 		if (result.shouldGenerate)
 		{

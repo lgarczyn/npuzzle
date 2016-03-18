@@ -58,7 +58,7 @@ void	print_map(const std::string& data, const std::string& solution)
 	{
 		for (int x = 0; x < width; ++x)
 		{
-			size_t index = x + y * height;
+			size_t index = x + y * width;
 			uint16_t c = data.at(index);
 			std::string val = std::to_string(c);
 
