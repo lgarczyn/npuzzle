@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:16:53 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 17:43:59 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 19:10:24 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 class State;
 
-using indexer = int (*)(State* state);
+using indexer = score (*)(const State*);
 
 class State {
 public:
@@ -34,6 +34,10 @@ public:
 	static std::vector<int>	solution_finder;
 	static score initial_score;
 	static std::vector<int> order;
+	static indexer	get_index;
+	static score	get_index_basic(const State* a);
+	static score	get_index_uniform(const State* a);
+	static score	get_index_greedy(const State* a);
 
 		enum Movement {
 			None,
@@ -66,10 +70,6 @@ public:
 
 		bool						operator<(const State* b) const;
 		static void					init(int width, int height);
-		static indexer 				get_index;
-		static int					indexer_astar(State *);
-		static int					indexer_uniform(State *);
-		static int					indexer_greedy(State *);
 
 private:
 		std::string	_data;

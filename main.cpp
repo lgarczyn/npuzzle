@@ -6,7 +6,7 @@
 /*   By: edelangh <edelangh@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/04 14:43:29 by edelangh          #+#    #+#             */
-/*   Updated: 2016/03/17 17:52:50 by edelangh         ###   ########.fr       */
+/*   Updated: 2016/03/17 19:17:32 by edelangh         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@
 
 int		display_help(const char* path = "npuzzle")
 {
-	std::cout << "Usage: " << path << " [-h] [-w WIDTH] [-i ITERATION] [-s] [-u] [-f1] [-f2] [-f3] [-c MIN_STEP] [-m FILE]" << std::endl;
+	std::cout << "Usage: " << path << " [-h] " << std::endl
+		<< "[-w WIDTH] [-i ITERATION] [-u] [-s]" << std::endl
+	   	<< "[-f1] [-f2] [-f3] [-m FILE]" << std::endl
+	   	<< "[--greedy] [--uniform]" << std::endl;
 	std::cout << "if no map is given, npuzzle should use stdin." << std::endl;
 	return (0);
 }
@@ -63,20 +66,15 @@ Parser::ParseResult	parse_args(int ac, char **av)
 		if (is_cmd_opt(av, av + ac, "-h"))
 			exit(display_help(av[0]));
 		if (is_cmd_opt(av, av + ac, "-f1"))
-		{
 			Heuristics::HeuristicFunction = Heuristics::ManhattanDistance;
-			Heuristics::HeuristicFunctionSwapper = Heuristics::ManhattanDistanceSwap;
-		}
 		if (is_cmd_opt(av, av + ac, "-f2"))
-		{
 			Heuristics::HeuristicFunction = Heuristics::LinearConflict;
-			Heuristics::HeuristicFunctionSwapper = Heuristics::SmartDistanceSwap;
-		}
 		if (is_cmd_opt(av, av + ac, "-f3"))
-		{
 			Heuristics::HeuristicFunction = Heuristics::SuperSmartDistance;
-			Heuristics::HeuristicFunctionSwapper = Heuristics::SuperSmartDistanceSwap;
-		}
+		if (is_cmd_opt(av, av + ac, "--uniform"))
+			State::get_index = State::get_index_uniform;
+		if (is_cmd_opt(av, av + ac, "--greedy"))
+			State::get_index = State::get_index_greedy;
 		result = get_result(ac, av);
 		if (is_cmd_opt(av, av + ac, "-i"))
 			Generator::iteration = std::stoi(get_cmd_opt(av, av + ac, "-i"));
@@ -118,7 +116,7 @@ Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 				//std::cout << tgetstr((char*)"cl", NULL);
 				print_map(solverResult.actual_state->get_data(), State::solution);
 				std::cout << "Iteration count: " << it << std::endl;
-				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]: " << std::endl;
+				std::cout << "Solution [score: " << solverResult.actual_state->get_weight() << "]" << std::endl;
 			}
 			++it;
 		}

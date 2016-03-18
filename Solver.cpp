@@ -31,15 +31,68 @@ State*	Solver::get_smallest_state()
 	throw new std::logic_error("No valid opened state but count is still superior to 0");
 }
 
+void	Solver::store_in_universe(State *state)
+{
+	void** 				node = &_universe;
+	const std::string& 	data = state->get_data();
+
+	for (int i = 0; i < State::size; i++)
+	{
+		if (*node == nullptr)
+		{
+			*node = new void*[State::size]();
+		}
+		node = &(node[(int)data[i]]);
+	}
+	*node = static_cast<void*>(state);
+}
+
+State	*Solver::get_in_universe(State *state)
+{
+	void** 				node = &_universe;
+	const std::string&  data = state->get_data();
+
+	for (int i = 0; i < State::size; i++)
+	{
+		if (*node == nullptr)
+		{
+			return nullptr;
+		}
+		node = &(node[(int)data[i]]);
+	}
+	return (static_cast<State*>(*node));
+}
+
+State**	Solver::get_universe_position(State *state)
+{
+	void** 				node = &_universe;
+	const std::string& 	data = state->get_data();
+
+	for (int i = 0; i < State::size; i++)
+	{
+		if (*node == nullptr)
+		{
+			*node = new void*[State::size]();
+		}
+		unsigned char index = data[i];
+		node = &(static_cast<void**>(*node)[index]);
+	}
+	return (reinterpret_cast<State**>(node));
+}
+
 Solver::Solver(State* root) : _opened()
 {
 
 	State::initial_score = root->get_weight();
 	get_opened_set(root)->insert(root);
+
+	/*universe*/
+	_universe = nullptr;
+	*get_universe_position(root) = root;
+
 	_openCount = 1;
 	_sizeComplexity = 0;
 	_timeComplexity = 0;
-	_stepCount = 0;
 }
 
 void	Solver::set_candidates(State* from)
@@ -75,7 +128,6 @@ Solver::Result Solver::step()
 {
 	Result result = Result(0, 0);
 
-	_stepCount++;
 	if (_openCount > 0)
 	{
 		State* e = get_smallest_state();
@@ -89,6 +141,7 @@ Solver::Result Solver::step()
 		else
 		{
 			get_opened_set(e)->erase(e);
+
 			_openCount--;
 
 			set_candidates(e);
@@ -96,6 +149,27 @@ Solver::Result Solver::step()
 			{
 				auto s = _candidates[i];
 				if (s) {
+
+					State** position = get_universe_position(s);
+
+					if (*position != nullptr)
+					{
+						State* previous = *position;
+						if (State::get_index(s) < State::get_index(previous))
+						{
+							get_opened_set(previous)->erase(previous);
+							_openCount--;
+							_timeComplexity--;
+							delete previous;
+						}
+						else
+						{
+							delete s;
+							continue;
+						}
+					}
+
+					*position = s;
 					get_opened_set(s)->insert(s);
 					_openCount++;
 					_timeComplexity++;
@@ -105,8 +179,6 @@ Solver::Result Solver::step()
 			}
 		}
 	}
-	if (_stepCount % CLEANUP_INTERVAL == 0)
-		cleanup_duplicates();
 
 	result.sizeComplexity = _sizeComplexity;
 	result.timeComplexity = _timeComplexity;
@@ -122,34 +194,4 @@ Solver::Result::Result(int timeComplexity, int sizeComplexity):
 		movements(nullptr),
 		finished(false)
 {
-}
-
-void Solver::cleanup_duplicates()
-{
-	set library;
-
-	int counter = 0;
-
-	for (auto set:_opened)
-	{
-		if (set)
-		{
-			auto it = set->begin();
-			while (it != set->end())
-			{
-				if (library.find(*it) != library.end())
-				{
-					it = set->erase(it);
-				}
-				else
-				{
-					library.insert(*it);
-					it++;
-				}
-			}
-
-			if (++counter > CLEANUP_DEPTH)
-				return;;
-		}
-	}
 }
