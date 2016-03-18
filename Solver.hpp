@@ -30,7 +30,7 @@ class Solver {
 				Result(int timeComplexity, int sizeComplexity);
 		};
 
-		Solver(State* root);
+		Solver(State* root, bool forget);
 		Result step();
 		set* get_opened_set(State* state);
 		set* get_closed_set(const State* state);
@@ -48,6 +48,7 @@ class Solver {
 		int _timeComplexity;
 		int _sizeComplexity;
 		int _openCount;
+		bool _forget;
 
 		void* _universe;
 };

@@ -80,7 +80,7 @@ State**	Solver::get_universe_position(State *state)
 	return (reinterpret_cast<State**>(node));
 }
 
-Solver::Solver(State* root) : _opened()
+Solver::Solver(State* root, bool forget) : _opened(), _forget(forget)
 {
 
 	State::initial_score = root->get_weight();
@@ -88,7 +88,8 @@ Solver::Solver(State* root) : _opened()
 
 	/*universe*/
 	_universe = nullptr;
-	*get_universe_position(root) = root;
+	if (!_forget)
+		*get_universe_position(root) = root;
 
 	_openCount = 1;
 	_sizeComplexity = 0;
@@ -150,26 +151,30 @@ Solver::Result Solver::step()
 				auto s = _candidates[i];
 				if (s) {
 
-					State** position = get_universe_position(s);
-
-					if (*position != nullptr)
+					if (!_forget)
 					{
-						State* previous = *position;
-						if (State::get_index(s) < State::get_index(previous))
+						State** position = get_universe_position(s);
+
+						if (*position != nullptr)
 						{
-							get_opened_set(previous)->erase(previous);
-							_openCount--;
-							_timeComplexity--;
-							delete previous;
+							State* previous = *position;
+							if (State::get_index(s) < State::get_index(previous))
+							{
+								get_opened_set(previous)->erase(previous);
+								_openCount--;
+								_timeComplexity--;
+								delete previous;
+							}
+							else
+							{
+								delete s;
+								continue;
+							}
 						}
-						else
-						{
-							delete s;
-							continue;
-						}
+
+						*position = s;
 					}
 
-					*position = s;
 					get_opened_set(s)->insert(s);
 					_openCount++;
 					_timeComplexity++;
