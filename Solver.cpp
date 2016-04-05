@@ -36,7 +36,7 @@ State**	Solver::get_universe_position(State *state)
 	void** 				node = &_universe;
 	const std::string& 	data = state->get_data();
 
-	for (int i = 0; i < State::size; i++)
+	for (int i = 0; i < State::size - 1; i++)
 	{
 		if (*node == nullptr)
 		{
