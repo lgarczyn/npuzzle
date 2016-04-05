@@ -10,7 +10,7 @@
 #include <unordered_set>
 #include "State.hpp"
 #define MAX_SOLUTION_LENGTH ((int)10000)
-#define SOLVER_BUCKET_SIZE ((int)10000)å
+#define SOLVER_BUCKET_SIZE ((int)10000)
 
 using set = std::unordered_set<State*, custom_hash, custom_equal_to>;
 

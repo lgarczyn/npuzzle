@@ -7,7 +7,8 @@ The goal of this project is to solve the N-puzzle ("taquin" in French) game usin
 ## Bonus
 
 - current state display
-- g() et h() ?
+- greedy, uniform
+- blind
 - animation
 - rectangle
 - Generator

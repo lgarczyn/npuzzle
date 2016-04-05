@@ -17,7 +17,7 @@
 #include "Generator.hpp"
 #include "Solver.hpp"
 #include "tools.h"
-#include <iostream>
+#include <unistd.h>
 #include <termcap.h>
 #include <unistd.h>
 
@@ -76,6 +76,8 @@ Parser::ParseResult	parse_args(int ac, char **av)
 			State::get_index = State::indexer_uniform;
 		if (is_cmd_opt(av, av + ac, "--greedy"))
 			State::get_index = State::indexer_greedy;
+		if (is_cmd_opt(av, av + ac, "--forget"))
+			result.forget = true;
 		if (is_cmd_opt(av, av + ac, "--rect"))
 			Parser::allow_rectangle = true;
 		result = get_result(ac, av);
@@ -106,7 +108,7 @@ Parser::ParseResult	parse_args(int ac, char **av)
 
 Solver::Result	solve_loop(State *initial, Parser::ParseResult&parseResult)
 {
-	Solver			puzzle(initial, );
+	Solver			puzzle(initial, parseResult.forget);
 	Solver::Result	solverResult(0, 0);
 	size_t 			it;
 
@@ -156,7 +158,6 @@ int		main(int ac, char **av)
 
 	Solver::Result solverResult = solve_loop(initial, parseResult);
 
-	return (0);
 	bool displayHelp = true;
 	while (1)
 	{

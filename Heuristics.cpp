@@ -110,6 +110,7 @@ score Heuristics::SuperSmartDistance(const std::string& data, int width, int hei
 	const std::string&	solution = State::solution;
 
 	(void)width;
+	(void)height;
 	for (int i = 0; i < length; i++)
 	{
 		val = data[i];
