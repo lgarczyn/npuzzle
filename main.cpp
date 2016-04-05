@@ -19,6 +19,7 @@
 #include "tools.h"
 #include <iostream>
 #include <termcap.h>
+#include <unistd.h>
 
 int		display_help(const char* path = "npuzzle")
 {
